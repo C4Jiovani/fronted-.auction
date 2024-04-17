@@ -1,0 +1,157 @@
+<template>
+    <div>
+        <v-snackbar v-model="snackbar" shaped top color="success" :timeout="timeout">
+            {{ text }}
+
+            <template v-slot:action="{ attrs }">
+                <v-btn color="blue" text v-bind="attrs" @click="snackbar = false" append-icon="home">
+                </v-btn>
+            </template>
+        </v-snackbar>
+        <v-tabs v-model="tab" color="pink" left style="margin-top: 50px;">
+            <v-tab :key="1" style="padding-right: 18%;padding-left: 18%;"
+                class="text-capitalize"><b>Connexion</b></v-tab>
+            <v-tab :key="2" style="padding-right: 18%;padding-left: 18%;"
+                class="text-capitalize"><b>s'inscrire</b></v-tab>
+        </v-tabs>
+
+
+        <v-tabs-items v-model="tab">
+            <v-tab-item :key="1">
+                <v-form>
+                    <br><br>
+                    <label style="font-size: 15px;"><b>E-mail :</b></label>
+                    <v-text-field placeholder="Exemple@gmail.com" style="font-size: 14px;" elevation="0"
+                        v-model="loginForm.email" name="email" outlined dense></v-text-field>
+                    <label style=""><b>Mots de passe :</b></label>
+                    <v-text-field v-model="loginForm.password" placeholder="Mots de passe" style="font-size: 14px;" outlined dense
+                        type="password"></v-text-field>
+                    <v-btn type="submit" color="#ab0767"
+                        style="width: 100%; color: white;border-radius: 5px; height: 45px;" class="text-capitalize"
+                        @click.prevent="login" :loading="load"><b>Se connecter</b></v-btn>
+                </v-form>
+                <div style="margin-top: 20px;">
+                    <a style="color: black; opacity: 64%;" @click="forgetPass()">Mots de passe oublié?</a>
+                </div>
+            </v-tab-item>
+
+            <v-tab-item :key="2">
+                <v-form>
+                    <v-text-field v-model="signupForm.name" required outlined dense
+                        prepend-inner-icon="mdi-account-outline mdi-card-account-details" label="Nom"
+                        class="mt-5"></v-text-field>
+                    <v-text-field v-model="signupForm.userName" outlined dense prepend-inner-icon="mdi-account-outline"
+                        label="Nom d'utilisateur"></v-text-field>
+                    <v-text-field v-model="signupForm.email" outlined dense label="Email"
+                        prepend-inner-icon="mdi-gmail"></v-text-field>
+                    <v-text-field v-model="signupForm.numTelephone" outlined dense :rules="rules"
+                        prepend-inner-icon="mdi-phone" label="Numero de telephone"></v-text-field>
+                    <v-text-field v-model="signupForm.password" outlined dense label="Password "
+                        prepend-inner-icon="mdi-lock-outline" type="password"></v-text-field>
+                    <v-btn color="#ab0767" @click.prevent="signup()"
+                        style="width: 100%; color: white;">S'inscrire</v-btn>
+                </v-form>
+            </v-tab-item>
+        </v-tabs-items>
+    </div>
+</template>
+
+<script>
+import axios from 'axios';
+
+export default {
+    name: 'loginVueTwo',
+    data() {
+        return {
+            tab: 2,
+            loginForm: {
+                email: '',
+                password: '',
+            },
+            signupForm: {
+                name: '',
+                userName: '',
+                email: '',
+                password: '',
+                numTelephone: '',
+                profile: 'mdi-user'
+            },
+            rules: [
+                v => /^\d+$/.test(v) || 'Le numero de telephone doit être un nombre',
+                v => /^\d{10}$/.test(v) || 'Le numero de telephone doit comporter 10 chiffres',
+            ],
+            snackbar: false,
+            text: `Bienvenue ${this.userName}`,
+            timeout: 1500,
+            load: false,
+            rulesErr: false
+        };
+    },
+    methods: {
+        // async login() {
+        //     try {
+        //         await axios.post('http://localhost:5000/user/login', this.loginForm);
+        //         this.loginForm = { email: '', password: '' };
+        //         this.snackbar = true
+        //         this.load = true
+        //         // console.log(this.loginForm
+        //         setTimeout(() => {
+        //             this.load = false;
+        //             // Rediriger vers l'accueil après le délai de 2 secondes
+        //             this.$router.push('/accueil');
+        //         }, 2500);
+        //     } catch (err) {
+        //         this.rulesErr = true
+        //         console.error('Erreur lors de la connexion:', err);
+        //         alert('Erreur lors de la connexion');
+        //     }
+        // },
+        async login() {
+            try {
+                const response = await axios.post('http://localhost:5000/user/login', this.loginForm);
+                const { user, token } = response.data; // Récupérer les données utilisateur et le token de la réponse
+
+                // Stocker le token et les données utilisateur localement, par exemple dans localStorage
+                localStorage.setItem('accessToken', token);
+                localStorage.setItem('userData', JSON.stringify(user));
+
+                // Réinitialiser le formulaire de connexion et afficher un message de succès
+                this.loginForm = { email: '', password: '' };
+                this.snackbar = true;
+                this.text = `Bienvenue ${response.data.name}`;
+                // console.log(response.data.name)
+
+                // Redirection vers l'accueil après un délai
+                setTimeout(() => {
+                    this.$router.push('/accueil');
+                }, 2500);
+            } catch (err) {
+                this.rulesErr = true;
+                console.error('Erreur lors de la connexion:', err);
+                alert('Erreur lors de la connexion');
+            }
+        },
+
+        async signup() {
+            try {
+                await axios.post('http://localhost:5000/user/register', this.signupForm)
+                this.loginForm = { name: '', userName: '', email: '', password: '', numTelephone: '', profile: '' };
+                this.signupForm.email = '',
+                    this.signupForm.name = '',
+                    this.signupForm.numTelephone = '',
+                    this.signupForm.password = '',
+                    this.signupForm.userName = ''
+            }
+            catch (err) {
+                alert('Erreur lors de la inscri');
+            }
+            // Ajoutez votre logique d'inscription ici
+            console.log('Inscription en cours:', this.signupForm);
+        },
+        async forgetPass(){
+            this.$router.push('/forgetpass')
+        }
+    },
+};
+
+</script>
