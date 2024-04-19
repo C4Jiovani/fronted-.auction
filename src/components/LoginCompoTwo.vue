@@ -8,6 +8,17 @@
                 </v-btn>
             </template>
         </v-snackbar>
+        <v-snackbar v-model="snackbarWrongPass" shaped color="warning" :timeout="timeout">
+            <v-icon class="mr-3">mdi-alert</v-icon>
+            <b>{{ textWrongPass }}</b>
+        </v-snackbar>
+        <v-snackbar v-model="snackbarDoneSignup" shaped top color="success" :timeout="timeout">
+            {{ textDoneSignup }}
+            <template v-slot:action="{ attrs }">
+                <v-btn color="blue" text v-bind="attrs" @click="snackbar = false" append-icon="home">
+                </v-btn>
+            </template>
+        </v-snackbar>
         <v-tabs v-model="tab" color="pink" left style="margin-top: 50px;">
             <v-tab :key="1" style="padding-right: 18%;padding-left: 18%;"
                 class="text-capitalize"><b>Connexion</b></v-tab>
@@ -22,13 +33,15 @@
                     <br><br>
                     <label style="font-size: 15px;"><b>E-mail :</b></label>
                     <v-text-field placeholder="Exemple@gmail.com" style="font-size: 14px;" elevation="0"
-                        v-model="loginForm.email" name="email" outlined dense></v-text-field>
+                        v-model="loginForm.email" name="email" outlined dense @input="checkFormValidity"></v-text-field>
                     <label style=""><b>Mots de passe :</b></label>
-                    <v-text-field v-model="loginForm.password" placeholder="Mots de passe" style="font-size: 14px;" outlined dense
-                        type="password"></v-text-field>
+                    <v-text-field v-model="loginForm.password" placeholder="Mots de passe" style="font-size: 14px;"
+                        outlined dense :type="showPass ? 'text' : 'password'" @click:append="reverse()"
+                        :append-icon="showPass ? 'mdi-eye-off' : 'mdi-eye'" @input="checkFormValidity"></v-text-field>
                     <v-btn type="submit" color="#ab0767"
                         style="width: 100%; color: white;border-radius: 5px; height: 45px;" class="text-capitalize"
-                        @click.prevent="login" :loading="load"><b>Se connecter</b></v-btn>
+                        @click.prevent="login" :loading="load" :disabled="isFormInvalid"><b>Se
+                            connecter</b></v-btn>
                 </v-form>
                 <div style="margin-top: 20px;">
                     <a style="color: black; opacity: 64%;" @click="forgetPass()">Mots de passe oublié?</a>
@@ -46,7 +59,7 @@
                         prepend-inner-icon="mdi-gmail"></v-text-field>
                     <v-text-field v-model="signupForm.numTelephone" outlined dense :rules="rules"
                         prepend-inner-icon="mdi-phone" label="Numero de telephone"></v-text-field>
-                    <v-text-field v-model="signupForm.password" outlined dense label="Password "
+                    <v-text-field v-model="signupForm.password" outlined dense label="Mots de passe"
                         prepend-inner-icon="mdi-lock-outline" type="password"></v-text-field>
                     <v-btn color="#ab0767" @click.prevent="signup()"
                         style="width: 100%; color: white;">S'inscrire</v-btn>
@@ -81,10 +94,16 @@ export default {
                 v => /^\d{10}$/.test(v) || 'Le numero de telephone doit comporter 10 chiffres',
             ],
             snackbar: false,
-            text: `Bienvenue ${this.userName}`,
-            timeout: 1500,
+            text: `Bienvenue ${this.username}`,
+            timeout: 3000,
             load: false,
-            rulesErr: false
+            rulesErr: false,
+            showPass: false,
+            isFormInvalid: true,
+            textWrongPass: 'Identifiant incorrect veuillez verifier',
+            snackbarWrongPass: false,
+            textDoneSignup: 'Compte créer avec succès',
+            snackbarDoneSignup: false
         };
     },
     methods: {
@@ -127,8 +146,9 @@ export default {
                 }, 2500);
             } catch (err) {
                 this.rulesErr = true;
-                console.error('Erreur lors de la connexion:', err);
-                alert('Erreur lors de la connexion');
+                this.snackbarWrongPass = true
+                // console.error('Erreur lors de la connexion:', err);
+                // // alert('Erreur lors de la connexion');
             }
         },
 
@@ -141,16 +161,23 @@ export default {
                     this.signupForm.numTelephone = '',
                     this.signupForm.password = '',
                     this.signupForm.userName = ''
-            }
-            catch (err) {
-                alert('Erreur lors de la inscri');
+                    this.snackbarDoneSignup = true
+                }
+                catch (err) {
+                // alert('Erreur lors de la inscri');
             }
             // Ajoutez votre logique d'inscription ici
             console.log('Inscription en cours:', this.signupForm);
         },
-        async forgetPass(){
+        async forgetPass() {
             this.$router.push('/forgetpass')
-        }
+        },
+        reverse() {
+            this.showPass = !this.showPass
+        },
+        checkFormValidity() {
+            this.isFormInvalid = !this.loginForm.email || !this.loginForm.password;
+        },
     },
 };
 

@@ -1,15 +1,19 @@
 <template>
     <v-row>
         <v-col cols="7">
-            <p class="bigTitle" style="margin-top: 100px;"><b>Plongez dans l'excitation des Enchères :</b></p>
+            <br><br><br>
+            <!-- <p class="bigTitle" style="margin-top: 100px;"><b>Plongez dans l'excitation des Enchères :</b></p> -->
+            <p class="bigTitle typewriter">{{ typewriterText }}</p>
             <p class="mt-10" style="color: #666666;">
                 Découvrez des trésors uniques sur notre plateforme en ligne
             </p>
-            <v-btn color="#ab0767" dark class="mt-6 text-capitalize" elevation="2" rounded large
-                @click="redirectionPageConnexion">
-                <b>Se Connecter</b>
-                <v-icon class="ml-3 pt-3 pb-3">mdi-arrow-right</v-icon>
-            </v-btn>
+            <v-hover v-slot="{ hover }" open-delay="50">
+                <v-btn color="#ab0767" dark class="mt-6 text-capitalize" rounded large @click="redirectionPageConnexion"
+                    :elevation="hover ? 5 : 2" :class="{ 'on-hover': hover }">
+                    <b>Se Connecter</b>
+                    <v-icon class="ml-3 pt-3 pb-3">mdi-arrow-right</v-icon>
+                </v-btn>
+            </v-hover>
         </v-col>
         <v-col cols="1" class="image">
             <img :src="require('@/assets/curseur.png')" alt="" style="margin-left: -70px;" width="50px" height="50px" />
@@ -23,12 +27,32 @@
 <script>
 export default {
     name: 'HomeView',
+    data() {
+        return {
+            typewriterText: '',
+            fullText: "Plongez dans l'excitation des Enchères",
+            currentIndex: 0,
+            typingSpeed: 100,
+        }
+    },
     methods: {
         redirectionPageConnexion() {
             // Redirection vers la page "pageConnexion.vue"
             this.$router.push('/login');
+        },
+        startTypewriter() {
+      const intervalId = setInterval(() => {
+        this.typewriterText += this.fullText[this.currentIndex];
+        this.currentIndex++;
+        if (this.currentIndex === this.fullText.length) {
+          clearInterval(intervalId);
         }
-    }
+      }, this.typingSpeed);
+    },
+    },
+    mounted() {
+    this.startTypewriter();
+  },
 }
 </script>
 
@@ -48,7 +72,12 @@ export default {
 .image {
     margin-top: 200px;
 }
-.test{
+
+.test {
     font-size: 10px;
+}
+.typewriter {
+  overflow: hidden; /* Masquer le texte qui déborde */
+  margin: 0 auto; /* Centrer le texte horizontalement */
 }
 </style>
