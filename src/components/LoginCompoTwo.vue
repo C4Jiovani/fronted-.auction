@@ -107,43 +107,31 @@ export default {
         };
     },
     methods: {
-        // async login() {
-        //     try {
-        //         await axios.post('http://localhost:5000/user/login', this.loginForm);
-        //         this.loginForm = { email: '', password: '' };
-        //         this.snackbar = true
-        //         this.load = true
-        //         // console.log(this.loginForm
-        //         setTimeout(() => {
-        //             this.load = false;
-        //             // Rediriger vers l'accueil après le délai de 2 secondes
-        //             this.$router.push('/accueil');
-        //         }, 2500);
-        //     } catch (err) {
-        //         this.rulesErr = true
-        //         console.error('Erreur lors de la connexion:', err);
-        //         alert('Erreur lors de la connexion');
-        //     }
-        // },
         async login() {
             try {
                 const response = await axios.post('http://localhost:5000/user/login', this.loginForm);
                 const { user, token } = response.data; // Récupérer les données utilisateur et le token de la réponse
-
-                // Stocker le token et les données utilisateur localement, par exemple dans localStorage
                 localStorage.setItem('accessToken', token);
                 localStorage.setItem('userData', JSON.stringify(user));
+                if (this.loginForm.email === 'Admin' && this.loginForm.password === '123') {
+                    this.$router.push('/admin');
+                }
+                else {
+                    setTimeout(() => {
+                        this.$router.push('/accueil');
+                    }, 2500);
+                }
+
+                // Stocker le token et les données utilisateur localement, par exemple dans localStorage
 
                 // Réinitialiser le formulaire de connexion et afficher un message de succès
-                this.loginForm = { email: '', password: '' };
-                this.snackbar = true;
-                this.text = `Bienvenue ${response.data.name}`;
+                // this.loginForm = { email: '', password: '' };
+                // this.snackbar = true;
+                // this.text = `Bienvenue ${user.name}`;
                 // console.log(response.data.name)
 
                 // Redirection vers l'accueil après un délai
-                setTimeout(() => {
-                    this.$router.push('/accueil');
-                }, 2500);
+
             } catch (err) {
                 this.rulesErr = true;
                 this.snackbarWrongPass = true
@@ -161,9 +149,9 @@ export default {
                     this.signupForm.numTelephone = '',
                     this.signupForm.password = '',
                     this.signupForm.userName = ''
-                    this.snackbarDoneSignup = true
-                }
-                catch (err) {
+                this.snackbarDoneSignup = true
+            }
+            catch (err) {
                 // alert('Erreur lors de la inscri');
             }
             // Ajoutez votre logique d'inscription ici

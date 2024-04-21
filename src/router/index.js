@@ -8,7 +8,7 @@ import HistoryView from '../views/HistoryView.vue'
 import Login from '@/views/Login.vue'
 import HomeView from '../views/HomeView.vue'
 import ForgetPass from '@/views/ForgetPass.vue'
-
+import Dashboard from '@/views/Admin/Dashboard.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -47,7 +47,11 @@ const routes = [
     name: 'ForgetPass',
     component: ForgetPass
   },
-  
+  {
+    path: '/admin',
+    name: 'ForgetPass',
+    component: Dashboard
+  }
   
 ]
 
