@@ -49,7 +49,7 @@ const routes = [
   },
   {
     path: '/admin',
-    name: 'ForgetPass',
+    name: 'ForgetPassA',
     component: Dashboard
   }
   

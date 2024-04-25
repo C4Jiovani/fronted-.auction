@@ -95,7 +95,7 @@ export default {
             ],
             snackbar: false,
             text: `Bienvenue ${this.username}`,
-            timeout: 3000,
+            timeout: 2000,
             load: false,
             rulesErr: false,
             showPass: false,
@@ -119,7 +119,7 @@ export default {
                 else {
                     setTimeout(() => {
                         this.$router.push('/accueil');
-                    }, 2500);
+                    }, 100);
                 }
 
                 // Stocker le token et les données utilisateur localement, par exemple dans localStorage

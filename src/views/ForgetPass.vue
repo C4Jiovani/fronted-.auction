@@ -1,5 +1,9 @@
 <template>
     <v-container>
+        <v-snackbar v-model="snackbarWrongPass" shaped color="warning" :timeout="timeout">
+            <v-icon class="mr-3">mdi-alert</v-icon>
+            <b>{{ textWrongPass }}</b>
+        </v-snackbar>
         <center>
             <h1 class="mt-8">Recuperation de votre mots de passe</h1>
         </center>
@@ -81,7 +85,7 @@
                     <v-card class="mb-6" elevation="0" height="200px">
                         <center>
                             <h3>Validation du code</h3>
-                            <p class="mt-5">Code envoyé mail <b>zmcracky@gmail.com</b></p>
+                            <p class="mt-5">Code envoyé mail <b>{{ email }}</b></p>
                         </center>
                         <v-container>
                             <template>
@@ -140,6 +144,9 @@ export default {
             otp: '',
             text: '',
             expectedOtp: '111111',
+            snackbarWrongPass: false,
+            textWrongPass: 'L\'utilisateur n\'existe pas veuillez verifier',
+            timeout: 2000,
             // randomNumber: ''
         }
     },
@@ -169,6 +176,7 @@ export default {
                     console.log('Utilisateur non trouvé');
                 }
             } catch (error) {
+                this.snackbarWrongPass = true
                 console.error('Erreur lors de la vérification de l\'utilisateur:', error);
             }
         },
