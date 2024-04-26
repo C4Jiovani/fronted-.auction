@@ -1,6 +1,12 @@
 <template>
   <v-container>
-    <v-row style="max-height: 450px; overflow-y: auto; margin-bottom: 10px; padding-bottom: 10px;">
+    <h1 class="gradient-text"> Bonjour {{ user }}</h1>
+    <h2 class="mt-10" style="font-size: 3rem; color: #c4c7c5; line-height: 50px;">Nous somme ravis de vous <br>accueillir parmis nous</h2>
+    <span class="gradient"></span>
+    <h1 class="mt-5 pro" style="opacity: 80%;" id="produits">Prochainement </h1>
+    <caroussel />
+    <h1 class="mt-10" style="opacity: 80%;">Nos arts disponibles</h1>
+    <v-row class="mt-5 pb-10" style="margin-bottom: 10px; padding-bottom: 10px;">
       <v-col v-for="product in products" :key="product.IdPro" cols="4">
         <v-hover v-slot="{ hover }">
           <v-card color="grey lighten-4" max-width="350">
@@ -28,6 +34,7 @@
 </template>
 
 <script>
+import caroussel from '@/components/caroussel.vue'
 // import axios from 'axios';
 
 export default {
@@ -35,6 +42,8 @@ export default {
   data() {
     return {
       products: [],
+      drawer: null,
+      user: ''
     };
   },
   methods: {
@@ -50,7 +59,28 @@ export default {
   },
   created() {
     this.fetchProducts();
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      try {
+        const userObject = JSON.parse(userData)
+        this.user = userObject.name
+        console.log(userObject.name)
+      }
+      catch (err) {
+        console.log(err)
+      }
+      // console.log(userData)
+      // try {
+      //     const decodedToken = jwt_decode(token); // Déchiffrer le token
+      //     console.log('Informations de l\'utilisateur:', decodedToken);
+      //     // Vous pouvez maintenant utiliser les informations de l'utilisateur, par exemple :
+      //     // const { userId, username, email } = decodedToken;
+      // } catch (error) {
+      //     console.error('Erreur lors du déchiffrement du token:', error);
+      // }
+    }
   },
+  components: { caroussel }
 }
 
 </script>
@@ -75,4 +105,14 @@ export default {
 ::-webkit-scrollbar-thumb {
   background-color: pink;
 }
+
+.gradient-text {
+  margin-top: -35px;
+  font-size: 3rem;
+  color: transparent;
+  background: linear-gradient(to right, #4e83ef,#9b72cb,#d96570);
+  position: absolute;
+  background-clip: text;
+}
+
 </style>

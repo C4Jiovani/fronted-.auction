@@ -1,9 +1,8 @@
 <template>
-    <v-avatar color="#dfdfdf">
-        <v-img :src="imgUrl" alt="Jiovani">
-
-        </v-img>
-    </v-avatar>
+          <v-avatar>
+              <v-img  :src="imgUrl" alt="Jiovani">
+              </v-img>
+          </v-avatar>
 </template>
 <script>
 export default ({

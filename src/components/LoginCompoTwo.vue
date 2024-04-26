@@ -106,6 +106,8 @@ export default {
             snackbarDoneSignup: false
         };
     },
+    created() {
+    },
     methods: {
         async login() {
             try {
@@ -122,21 +124,9 @@ export default {
                     }, 100);
                 }
 
-                // Stocker le token et les données utilisateur localement, par exemple dans localStorage
-
-                // Réinitialiser le formulaire de connexion et afficher un message de succès
-                // this.loginForm = { email: '', password: '' };
-                // this.snackbar = true;
-                // this.text = `Bienvenue ${user.name}`;
-                // console.log(response.data.name)
-
-                // Redirection vers l'accueil après un délai
-
             } catch (err) {
                 this.rulesErr = true;
                 this.snackbarWrongPass = true
-                // console.error('Erreur lors de la connexion:', err);
-                // // alert('Erreur lors de la connexion');
             }
         },
 

@@ -1,19 +1,14 @@
 <template>
-  <div class="about">
-    <Main />
     <v-container>
+      <h1 style="margin-top: -45px;" id="produits">Live<span style="color: red;">.</span></h1>
       <v-row>
-        <v-col cols="1">
-          <navBar class="mt-16" />
-        </v-col>
         <v-col cols="11">
-          <h1 class="mt-5" id="produits">Live<span style="color: red;">.</span></h1>
           <v-card class="mt-5" style="border-radius: 20px; background-color: #d9d9d9;">
             <v-row>
               <v-col cols="5" class="ml-9">
                 <h5>{{countdown}}</h5>
                 <v-img class="mt-2" style="border-top-left-radius:15px;border-top-right-radius:15px;"
-                  :src="imgUrl"></v-img>
+                  :src="imgUrl" height="350"></v-img>
                 <h3
                   style="color: white; background-color: #e91e63; font-size: 20px; padding: 20px; border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
                   Prix Actuelle:</h3>
@@ -42,11 +37,10 @@
         </v-col>
       </v-row>
     </v-container>
-  </div>
 </template>
 <script>
-import Main from '@/components/Main.vue';
-import navBar from '../components/navBar.vue'
+// import Main from '@/components/Main.vue';
+// import navBar from '../components/navBar.vue'
 export default ({
   name: 'nodtiPage',
   data() {
@@ -61,7 +55,7 @@ export default ({
       class: null
     }
   },
-  components: { navBar, Main },
+  // components: { navBar, Main },
   methods: {
     test() {
       console.log('cliked')

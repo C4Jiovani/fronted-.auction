@@ -9,6 +9,7 @@ import Login from '@/views/Login.vue'
 import HomeView from '../views/HomeView.vue'
 import ForgetPass from '@/views/ForgetPass.vue'
 import Dashboard from '@/views/Admin/Dashboard.vue'
+import test from '@/views/test.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -16,21 +17,25 @@ const routes = [
     path: '/accueil',
     name: 'accueil',
     component: Accueil,
-  },
-  {
-    path: '/notification',
-    name: 'notification',
-    component: NotificationView
-  },
-  {
-    path: '/live',
-    name: 'live',
-    component: LiveView
-  },
-  {
-    path: '/history',
-    name: 'historie',
-    component: HistoryView
+    children:[{
+      path: '/notification',
+      component: NotificationView
+    },
+    {
+      path: '/accueil',
+      component: test
+    },
+    {
+      path: '/live',
+      name: 'live',
+      component: LiveView
+    },
+    {
+      path: '/history',
+      name: 'historie',
+      component: HistoryView
+    },
+  ]
   },
   {
     path: '/login',

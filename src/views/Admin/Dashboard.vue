@@ -32,7 +32,7 @@
                                 <v-text-field type="number" placeholder="Prix du produit :" :readonly="true"
                                     class="mt-2" style="font-size: 14px; display: none" elevation="0" name="email"
                                     v-model="finalPrice" outlined dense></v-text-field>
-                                <label>Image:</label>
+                                <label><b>Image:</b></label><br>
                                 <input type="file" @change="handleFileUpload" accept="image/*" required><br>
                                 <label style="font-size: 15px;"><b class="mt-5">La classe produit :</b></label>
                                 <v-combobox clearable hide-selected outlined :items="items"
@@ -110,6 +110,7 @@ export default {
             menu: false,
             modal: false,
             menu2: false,
+            files: null,
             // date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
             elements: [
                 {

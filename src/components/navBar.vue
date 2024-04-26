@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div>
     <v-card class="navbar" elevation="0" style="width: 55px;">
       <div style="border-radius: 50px; background-color: #d9d9d9;">
@@ -13,18 +13,7 @@
               </v-tooltip>
             </v-card-text>
           </router-link>
-          <router-link to="/notification">
-            <v-card-text :class="{ 'active-icon': $route.name === 'notification' }" class="mt-2">
-              <v-tooltip left>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-badge bordered dot overlap color="pink"> <v-icon v-bind="attrs"
-                      v-on="on">mdi-bell</v-icon></v-badge>
-                </template>
-                <span>Notification</span>
-              </v-tooltip>
-            </v-card-text>
-          </router-link>
-          <router-link to="/live">
+          <router-link to="live">
             <v-card-text :class="{ 'active-icon': $route.name === 'live' }" class="mt-2">
               <v-tooltip left>
                 <template v-slot:activator="{ on, attrs }">
@@ -103,4 +92,4 @@ export default {
 /* .active-icon {
   color: #ff5c87;
 } */
-</style>
+</style> -->

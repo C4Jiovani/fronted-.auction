@@ -1,74 +1,59 @@
 <template>
-    <div style="max-height: 450px; overflow-y: auto; overflow-x: hidden; padding: 30px;">
-        <v-card class="card mt-5" v-for="(element, i) in notifBody" :key="i" elevation="2">
-            <v-row>
-                <v-col cols="1">
-                    <Avatar class="ml-3"></Avatar>
-                </v-col>
-                <v-col cols="11">
-                    <h3 class="notifiaction_Title">.Auction</h3>
-                    <p class="test">{{ element.body }}</p>
-                </v-col>
-            </v-row>
-        </v-card>
-    </div>
+        <v-list three-line style="margin-left: -35px;">
+            <template v-for="(item, index) in items">
+                <v-subheader v-if="item.header" :key="item.header" v-text="item.header"></v-subheader>
+
+                <v-divider v-else-if="item.divider" :key="index" :inset="item.inset"></v-divider>
+
+                <v-list-item v-else :key="item.title">
+                    <v-list-item-avatar width="60" height="60">
+                        <Avatar></Avatar>
+
+                    </v-list-item-avatar>
+
+                    <v-list-item-content>
+                        <v-list-item-title class="mb-0">
+                            <v-row>
+                                <v-col cols="9">
+                                    <h4>.Auction</h4>
+                                </v-col>
+                                <v-col cols="3">
+                                    <p class="caption" style="color: black; opacity: 40%">5 min.</p>
+                                </v-col>
+                            </v-row>
+                        </v-list-item-title>
+                        <v-list-item-subtitle style="margin-top: -5px">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cumque hic perspiciatis totam consectetur expedita ad vitae mollitia quis quasi quidem omnis sit unde saepe asperiores, maxime, modi sint ea fuga?</v-list-item-subtitle>
+                    </v-list-item-content>
+                </v-list-item>
+            </template>
+        </v-list>
 </template>
 
 <script>
 import Avatar from './Avatar.vue'
-export default ({
-    name: 'notifCompo',
-    data() {
-        return {
-            notifBody: [
-                {
-                    body: 'Y aura une vente en ligne dans 15 minutes. Preparez Vous !!!'
-                },
-                {
-                    body: 'Y aura une vente en ligne dans 15 minutes. Preparez Vous !!!'
-                },
-                {
-                    body: 'Y aura une vente en ligne dans 15 minutes. Preparez Vous !!!'
-                },
-                {
-                    body: 'Y aura une vente en ligne dans 15 minutes. Preparez Vous !!!'
-                },
-                {
-                    body: 'Y aura une vente en ligne dans 15 minutes. Preparez Vous !!!'
-                },
-                {
-                    body: 'Y aura une vente en ligne dans 15 minutes. Preparez Vous !!!'
-                },
-                {
-                    body: 'Y aura une vente en ligne dans 15 minutes. Preparez Vous !!!'
-                },
-            ]
-        }
-    },
-    components: { Avatar }
-})
+
+export default {
+    data: () => ({
+        items: [
+            { header: 'Today' },
+            {
+                subtitle: 'Lorem'
+            },
+            { divider: true, inset: true },
+            {
+                
+            },
+            { divider: true, inset: true },
+            {
+            },
+            { divider: true, inset: true },
+            {
+            },
+            { divider: true, inset: true },
+            {
+            },
+        ],
+    }),
+    components:{Avatar}
+}
 </script>
-<style scoped>
-.test {
-    margin-bottom: -10px;
-    font-size: 15px;
-    color: #30353c;
-}
-
-.card {
-    border-radius: 20px;
-    background-color: #FFE6BC;
-}
-::-webkit-scrollbar {
-  width: 7px;
-  height: 10px;
-  background-color: #F5F5F5;
-  color: pink;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: pink;
-}
-
-
-</style>
