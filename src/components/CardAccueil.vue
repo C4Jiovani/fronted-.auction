@@ -1,16 +1,14 @@
 <template>
   <v-container>
     <h1 class="gradient-text"> Bonjour {{ user }}</h1>
-    <h2 class="mt-10" style="font-size: 3rem; color: #c4c7c5; line-height: 50px;">Nous somme ravis de vous <br>accueillir parmis nous</h2>
-    <span class="gradient"></span>
-    <h1 class="mt-5 pro" style="opacity: 80%;" id="produits">Prochainement </h1>
-    <caroussel />
-    <h1 class="mt-10" style="opacity: 80%;">Nos arts disponibles</h1>
+    <h1 class="mt-15 pro" id="produits">En vente prochainement </h1>
+    <caroussel class="mt-5"/>
+    <h1 class="mt-10">Nos articles disponibles</h1>
     <v-row class="mt-5 pb-10" style="margin-bottom: 10px; padding-bottom: 10px;">
       <v-col v-for="product in products" :key="product.IdPro" cols="4">
         <v-hover v-slot="{ hover }">
           <v-card color="grey lighten-4" max-width="350">
-            <v-img :aspect-ratio="16 / 9" :src="`http://localhost:5000/${product.img}`">
+            <v-img :aspect-ratio="16 / 16" :src="`http://localhost:5000/${product.img}`">
               <v-expand-transition>
                 <div v-if="hover" class="d-flex transition-fast-in-fast-out pink v-card--reveal text-h2 white--text"
                   style="height: 100%;">
@@ -30,6 +28,7 @@
         </v-hover>
       </v-col>
     </v-row>
+    <h1> Nos partenaires </h1>
   </v-container>
 </template>
 
@@ -43,7 +42,7 @@ export default {
     return {
       products: [],
       drawer: null,
-      user: ''
+      user: '',
     };
   },
   methods: {
@@ -69,15 +68,6 @@ export default {
       catch (err) {
         console.log(err)
       }
-      // console.log(userData)
-      // try {
-      //     const decodedToken = jwt_decode(token); // Déchiffrer le token
-      //     console.log('Informations de l\'utilisateur:', decodedToken);
-      //     // Vous pouvez maintenant utiliser les informations de l'utilisateur, par exemple :
-      //     // const { userId, username, email } = decodedToken;
-      // } catch (error) {
-      //     console.error('Erreur lors du déchiffrement du token:', error);
-      // }
     }
   },
   components: { caroussel }
@@ -110,7 +100,7 @@ export default {
   margin-top: -35px;
   font-size: 3rem;
   color: transparent;
-  background: linear-gradient(to right, #4e83ef,#9b72cb,#d96570);
+  background: linear-gradient(to right, #4e83ef, #9b72cb, #d96570);
   position: absolute;
   background-clip: text;
 }

@@ -23,7 +23,7 @@ const routes = [
     },
     {
       path: '/accueil',
-      component: test
+      component: test, meta: {requireAuth: true}
     },
     {
       path: '/live',

@@ -1,6 +1,6 @@
 <template>
         <v-list three-line style="margin-left: -35px;">
-            <template v-for="(item, index) in items">
+            <template v-for="(item, index) in notif">
                 <v-subheader v-if="item.header" :key="item.header" v-text="item.header"></v-subheader>
 
                 <v-divider v-else-if="item.divider" :key="index" :inset="item.inset"></v-divider>
@@ -18,11 +18,10 @@
                                     <h4>.Auction</h4>
                                 </v-col>
                                 <v-col cols="3">
-                                    <p class="caption" style="color: black; opacity: 40%">5 min.</p>
                                 </v-col>
                             </v-row>
                         </v-list-item-title>
-                        <v-list-item-subtitle style="margin-top: -5px">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cumque hic perspiciatis totam consectetur expedita ad vitae mollitia quis quasi quidem omnis sit unde saepe asperiores, maxime, modi sint ea fuga?</v-list-item-subtitle>
+                        <v-list-item-subtitle style="margin-top: -5px">{{ notif[0].motif }}</v-list-item-subtitle>
                     </v-list-item-content>
                 </v-list-item>
             </template>
@@ -30,30 +29,35 @@
 </template>
 
 <script>
+// import axios from 'axios';
 import Avatar from './Avatar.vue'
 
 export default {
     data: () => ({
+        notifText: '',
         items: [
             { header: 'Today' },
             {
                 subtitle: 'Lorem'
             },
-            { divider: true, inset: true },
-            {
-                
-            },
-            { divider: true, inset: true },
-            {
-            },
-            { divider: true, inset: true },
-            {
-            },
-            { divider: true, inset: true },
-            {
-            },
         ],
+        notif: []
     }),
-    components:{Avatar}
+    components:{Avatar},
+    mounted(){
+        this.fetchNotif()
+    },
+    methods:{
+        async fetchNotif() {
+      try {
+        const response = await fetch('http://localhost:5000/admin/getnotif');
+        const data = await response.json();
+        this.notif = data;
+        // alert(this.notif.length)
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    }
 }
 </script>
