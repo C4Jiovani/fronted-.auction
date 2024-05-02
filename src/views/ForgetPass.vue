@@ -43,7 +43,7 @@
                         </v-container>
                     </v-card>
 
-                    <v-btn color="pink" style="color: white;" @click="checkUserByEmail()">
+                    <v-btn color="pink" style="color: white;" :disabled="email == ''" @click="checkUserByEmail()">
                         Continue
                     </v-btn>
 
@@ -60,19 +60,19 @@
                         <v-container>
                             <v-timeline align-top dense>
                                 <v-timeline-item color="blue" small>
-                                    Nom d'utilisateur: {{ userName }}
+                                    Nom d'utilisateur: <b>{{ userName }}</b>
                                 </v-timeline-item>
                                 <v-timeline-item color="blue" small>
-                                    Nom: {{ name }}
+                                    Nom: <b>{{ name }}</b>
                                 </v-timeline-item>
                                 <v-timeline-item color="blue" small>
-                                    Email: {{ email }}
+                                    Email: <b>{{ email }}</b>
                                 </v-timeline-item>
                             </v-timeline>
                         </v-container>
                     </v-card>
 
-                    <v-btn color="pink" style="color: white;" @click="Next()">
+                    <v-btn color="pink" style="color: white;" @click="sendVerificationCode()">
                         Continue
                     </v-btn>
 
@@ -88,22 +88,19 @@
                             <p class="mt-5">Code envoyé mail <b>{{ email }}</b></p>
                         </center>
                         <v-container>
-                            <template>
-                                <div>
-                                    <div class="ma-auto position-relative mt-2" style="max-width: 300px">
-                                        <v-otp-input v-model="otp" :disabled="loading" @finish="onFinish"></v-otp-input>
-                                        <v-overlay absolute :value="loading">
-                                            <v-progress-circular indeterminate color="primary"></v-progress-circular>
-                                        </v-overlay>
-                                    </div>
-                                    <v-snackbar v-model="snackbar" :color="snackbarColor" :timeout="2000">
-                                        {{ text }}
-                                    </v-snackbar>
-                                </div>
-                            </template>
+                            <div class="ma-auto position-relative" style="max-width: 300px">
+                                <v-otp-input v-model="otp" :disabled="loading" @finish="onFinish"></v-otp-input>
+                                <v-overlay absolute :value="loading">
+                                    <v-progress-circular indeterminate color="primary"></v-progress-circular>
+                                </v-overlay>
+                            </div>
+                            <v-snackbar v-model="snackbar" :color="snackbarColor" :timeout="2000">
+                                {{ text }}
+                            </v-snackbar>
                         </v-container>
                     </v-card>
-                    <v-btn color="pink" style="color: white;" @click="e1 = 4">
+                    <v-btn color="pink" style="color: white;" :disabled="otp !== expectedOtp || loading"
+                        @click="e1 = 4">
                         Continue
                     </v-btn>
 
@@ -112,9 +109,26 @@
                     </v-btn>
                 </v-stepper-content>
                 <v-stepper-content step="4">
-                    <v-card class="mb-12" color="grey lighten-1" height="200px"></v-card>
+                    <v-card class="mb-12" elevation="0" height="200px">
+                        <center>
+                            <h3>Veuillez saisir votre nouveau mots de passe</h3>
+                        </center>
+                        <v-container>
+                            <label style="font-size: 15px;"><b>Votre nouveau mot de passe :</b></label>
+                            <v-text-field v-model="password1" placeholder="Nouveau mot de passe"
+                                style="font-size: 14px;" elevation="0" outlined dense
+                                :rules="passwordRules"></v-text-field>
 
-                    <v-btn color="pink" style="color: white;" @click="e1 = 1">
+                            <label style="font-size: 15px;"><b>Tapez à nouveau votre nouveau mot de passe :</b></label>
+                            <v-text-field v-model="password2" placeholder="Nouveau mot de passe"
+                                style="font-size: 14px;" elevation="0" outlined dense
+                                :rules="passwordRules"></v-text-field>
+                        </v-container>
+                    </v-card>
+
+                    <v-btn color="pink" style="color: white;"
+                        :disabled="password1 !== password2 || password1 === '' || password2 === ''"
+                        @click="updatePassword()">
                         Continue
                     </v-btn>
 
@@ -124,6 +138,15 @@
                 </v-stepper-content>
             </v-stepper-items>
         </v-stepper>
+        <v-snackbar v-model="snackbarPass" color="success" :timeout="timeoutPass" :vertical="vertical">
+            {{ textPass }}
+
+            <template v-slot:action="{ attrs }">
+                <v-btn color="indigo" text v-bind="attrs" @click="snackbar = false">
+                    Close
+                </v-btn>
+            </template>
+        </v-snackbar>
     </v-container>
 </template>
 
@@ -138,16 +161,34 @@ export default {
             email: '',
             userName: '',
             name: '',
+            snackbarWrongPass: false,
+            textWrongPass: 'L\'utilisateur n\'existe pas veuillez verifier',
+            timeout: 2000,
+            check: null,
             loading: false,
             snackbar: false,
             snackbarColor: 'default',
             otp: '',
             text: '',
-            expectedOtp: '111111',
-            snackbarWrongPass: false,
-            textWrongPass: 'L\'utilisateur n\'existe pas veuillez verifier',
-            timeout: 2000,
+            expectedOtp: '',
+            password1: '',
+            password2: '',
+            passwordRules: [
+                value => !!value || 'Ce champ est requis',
+                value => (value && value.length >= 8) || 'Le mot de passe doit contenir au moins 8 caractères',
+                value => value === this.password1 || 'Les mots de passe ne correspondent pas'
+            ],
+            snackbarPass: false,
+            textPass: 'Felicitaion !! Mot de passe changé avec success',
+            vertical: true,
+            timeoutPass: 2000,
             // randomNumber: ''
+        }
+    },
+    computed: {
+        isOTPValid() {
+            // Vérifiez si l'OTP entré correspond à l'OTP attendu
+            return this.otp === this.expectedOtp;
         }
     },
     methods: {
@@ -156,7 +197,7 @@ export default {
             setTimeout(() => {
                 this.loading = false
                 this.snackbarColor = (rsp === this.expectedOtp) ? 'success' : 'warning'
-                this.text = `Le code "${rsp}" ne correspond pas`
+                this.text = `Processed OTP with "${rsp}" (${this.snackbarColor})`
                 this.snackbar = true
             }, 3500)
         },
@@ -180,26 +221,49 @@ export default {
                 console.error('Erreur lors de la vérification de l\'utilisateur:', error);
             }
         },
-        // async Next() {
-        //     // try {
-        //     //     console.log(this.email)
-        //     //     const response = await axios.post('http://localhost:3000/user/sendVerificationCode', { email: this.email });
-        //     //     console.log(response.data);
-        //     //     this.e1 = 3
-        //     // } catch (error) {
-        //     //     console.error('Erreur lors de l\'envoi du code:', error);
-        //     // }
-        //     return  Math.floor(100000 + Math.random() * 900000);
-        //     // console.log(nombre)
-        // }
-        Next() {
-            this.e1 = 3
-            // Générer un nombre aléatoire à 6 chiffres
-            const min = 100000;
-            const max = 999999;
-            this.randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-            // this.expectedOtp = this.randomNumber
-            // console.log(this.randomNumber)
+        async sendVerificationCode() {
+            try {
+                const response = await axios.post('http://localhost:5000/user/sendVerificationCode', { email: this.email })
+                console.log(response.data.message)
+                console.log('Mail envoyé')
+                this.sendVerificationCodeMail()
+                this.e1 = 3
+            }
+            catch (err) {
+                console.log('erreur')
+            }
+        },
+        async sendVerificationCodeMail() {
+            try {
+                console.log(this.email)
+                const response = await axios.post('http://localhost:5000/user/verificationcodemail', { email: this.email })
+                this.expectedOtp = response.data.code.toString()
+                console.log('OK VOILa le code', this.expectedOtp)
+            }
+            catch (err) {
+                console.log(err)
+            }
+        },
+        updatePassword() {
+            const requestData = {
+                email: this.email,
+                password: this.password1
+            }
+            axios.post('http://localhost:5000/user/resetpass', requestData)
+                .then(response => {
+                    console.log(response.data)
+                    this.email = '',
+                        this.password1 = '',
+                        this.snackbarPass = true,
+                        setTimeout(() => {
+                            this.$router.push('/login')
+                        }, 2000)
+                    // alert('Password has been changed')
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+
         }
     },
 }

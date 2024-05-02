@@ -11,6 +11,10 @@
                             style="color: white;">
                             <b>Ajouter produit</b>
                         </v-btn>
+                        <v-btn color="#ab0767" dark v-bind="attrs" v-on="on" class="mt-5 text-capitalize"
+                            style="color: white;">
+                            <b>Ajouter produit</b>
+                        </v-btn>
                     </template>
 
                     <v-card>
