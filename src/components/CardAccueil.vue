@@ -62,7 +62,7 @@ export default {
     if (userData) {
       try {
         const userObject = JSON.parse(userData)
-        this.user = userObject.name
+        this.user = userObject.userName
         console.log(userObject.name)
       }
       catch (err) {
