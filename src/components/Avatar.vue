@@ -1,14 +1,14 @@
 <template>
-          <v-avatar>
-              <v-img  :src="imgUrl" alt="Jiovani">
-              </v-img>
-          </v-avatar>
+    <v-avatar>
+        <v-img :src="imgUrl" alt="Jiovani">
+        </v-img>
+    </v-avatar>
 </template>
 <script>
 export default ({
     name: 'HelloWorld',
-    data(){
-        return{
+    data() {
+        return {
             imgUrl: require('@/assets/GitHub.jpg')
         }
     }

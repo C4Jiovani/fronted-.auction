@@ -41,30 +41,18 @@
           </v-card-title>
           <v-card-action>
             <v-container>
-              <v-row>
+              <v-row v-for="(comment, index) in comments" :key="index">
                 <v-col cols="2">
                   <Avatar />
                 </v-col>
                 <v-col cols="6.5">
-                  <h5>Rakotoarimanana</h5>
+                  <h5>{{ comment.username }}</h5>
                   <p style="font-size: 15px;">Je propose :</p>
                 </v-col>
                 <v-col cols="3.5">
-                  <h1>33 $</h1>
+                  <h1>{{ comment.price }}</h1>
                 </v-col>
-              </v-row>
-              <v-divider></v-divider>
-              <v-row class="mt-2">
-                <v-col cols="2">
-                  <Avatar />
-                </v-col>
-                <v-col cols="6.5">
-                  <h5>Rakotoarimanana</h5>
-                  <p style="font-size: 15px;">Je propose :</p>
-                </v-col>
-                <v-col cols="3.5">
-                  <h1>33 $</h1>
-                </v-col>
+                <v-divider></v-divider>
               </v-row>
             </v-container>
           </v-card-action>
@@ -99,7 +87,8 @@ export default ({
   // components: { navBar, Main },
   methods: {
     test() {
-      console.log('cliked')
+      // socket.emit('comment', { message: 'Mon nouveau commentaire' });
+      alert('cliked')
     },
     startCountdown() {
       this.timer = setInterval(() => {
@@ -161,6 +150,10 @@ export default ({
   mounted() {
     // this.startCountdown();
     this.getLive()
+    // socket.on('newComment',(data)=>{
+    //   console.log('Nouveau commentaire en temps réel ',data)
+    //   this.comments.push(data);
+    // })
   },
   components: {
     Avatar

@@ -176,7 +176,7 @@ export default {
                 this.initialPrice = 0;
                 this.finalPrice = 0;
                 this.description = '';
-                this.status = 'Active';
+                this.status = 'classeA';
                 this.image = null;
             } catch (error) {
                 console.error(error);
