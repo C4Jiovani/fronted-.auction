@@ -10,7 +10,8 @@
 
               <v-carousel class="mt-2" height="350" style="border-top-left-radius:15px;border-top-right-radius:15px;"
                 hide-delimiters>
-                <v-carousel-item v-for="(item, i) in items" :key="i" :src="item.src"></v-carousel-item>
+                <v-carousel-item></v-carousel-item>
+                <!-- <v-carousel-item v-for="(item, i) in items" :key="i" :src="item.src"></v-carousel-item> -->
               </v-carousel>
               <h3
                 style="color: white; background-color: #e91e63; font-size: 20px; padding: 20px; border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
@@ -24,10 +25,10 @@
               <v-row>
                 <v-col cols="9">
                   <v-text-field :rules="rules" class="mt-2" v-mask="['### ### ###']" label="Votre prix(en MGA)"
-                    style="border-radius: 30px;" type="number" solo></v-text-field>
+                    style="border-radius: 30px;" v-model="newComment" type="number" solo></v-text-field>
                 </v-col>
                 <v-col cols="1" class="mt-2">
-                  <v-icon @click="test()" class="mt-3">mdi-send</v-icon>
+                  <v-icon @click="sendComment" class="mt-3">mdi-send</v-icon>
                 </v-col>
               </v-row>
             </v-col>
@@ -35,22 +36,24 @@
         </v-card>
       </v-col>
       <v-col cols="4">
-        <v-card style="background-color: #d9d9d9; width: 100%; padding-right: -50px; border-radius: 15px;" class="mt-2">
+        <v-card
+          style="background-color: #d9d9d9; width: 100%; padding-right: -50px; border-radius: 15px; height: 470px;overflow-y: auto"
+          class="mt-2">
           <v-card-title class="ml-10" style="color: #e91e63;">
             Commentaire en direct
           </v-card-title>
           <v-card-action>
             <v-container>
-              <v-row v-for="(comment, index) in comments" :key="index">
+              <v-row v-for="comment in comments" :key="comment.id">
                 <v-col cols="2">
                   <Avatar />
                 </v-col>
                 <v-col cols="6.5">
-                  <h5>{{ comment.username }}</h5>
+                  <h5>{{ comment.nameL }}</h5>
                   <p style="font-size: 15px;">Je propose :</p>
                 </v-col>
-                <v-col cols="3.5">
-                  <h1>{{ comment.price }}</h1>
+                <v-col cols="3">
+                  <h1>{{ comment.montant }} $</h1>
                 </v-col>
                 <v-divider></v-divider>
               </v-row>
@@ -64,8 +67,9 @@
 <script>
 import axios from 'axios';
 import Avatar from '@/components/Avatar.vue';
-// import Main from '@/components/Main.vue';
-// import navBar from '../components/navBar.vue'
+import io from 'socket.io-client'
+const socket = io('http://localhost:5000')
+
 export default ({
   name: 'nodtiPage',
   data() {
@@ -81,7 +85,11 @@ export default ({
       nom: '',
       description: '',
       prixInit: '',
-      image: []
+      image: [],
+      comments: [],
+      newComment: '',
+      user: '',
+      userL: ''
     }
   },
   // components: { navBar, Main },
@@ -145,18 +153,38 @@ export default ({
       catch (err) {
         console.log(err)
       }
+    },
+    sendComment() {
+      socket.emit('newComment', { user: this.user, montant: this.newComment, nameL: this.userL });
+      
     }
   },
   mounted() {
     // this.startCountdown();
     this.getLive()
-    // socket.on('newComment',(data)=>{
-    //   console.log('Nouveau commentaire en temps réel ',data)
-    //   this.comments.push(data);
-    // })
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      try {
+        const userObject = JSON.parse(userData)
+        this.user = userObject.IdUser
+        this.userL = userObject.name // Assurez-vous d'attribuer correctement le nom d'utilisateur ici
+      } catch (err) {
+        console.log(err)
+      }
+    }
   },
   components: {
     Avatar
+  },
+  created() {
+    socket.on('newComment', (comment) => {
+      this.comments.push(comment)
+      localStorage.setItem('comments', JSON.stringify(this.comments));
+    })
+    const savedComments = localStorage.getItem('comments');
+    if (savedComments) {
+      this.comments = JSON.parse(savedComments);
+    }
   }
 })
 </script>
