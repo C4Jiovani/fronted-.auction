@@ -11,11 +11,12 @@
               <v-carousel class="mt-2" height="350" style="border-top-left-radius:15px;border-top-right-radius:15px;"
                 hide-delimiters>
                 <!-- <v-carousel-item></v-carousel-item> -->
-                <v-carousel-item v-for="(item, i) in image" :key="i" :src="`http://localhost:5000/${item.src}`" style="width: 350px;"></v-carousel-item>
+                <v-carousel-item v-for="(item, i) in image" :key="i" :src="`http://localhost:5000/${item.src}`"
+                  style="width: 350px;"></v-carousel-item>
               </v-carousel>
               <h3
                 style="color: white; background-color: #e91e63; font-size: 20px; padding: 20px; border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
-                Prix Actuelle: <span class="ml-5">{{ prixInit }} $</span></h3>
+                Prix Actuelle: <span class="ml-5" >{{ prixInit }} $</span></h3>
             </v-col>
             <v-col cols="5.5">
               <h1 style="color: #e91e63;" class="mt-5">{{ nom }}</h1>
@@ -42,23 +43,23 @@
           <v-card-title class="ml-10" style="color: #e91e63;">
             Commentaire en direct
           </v-card-title>
-          <v-card-action>
+          <v-card-actions>
             <v-container>
               <v-row v-for="comment in sortedComments" :key="comment.id">
                 <v-col cols="2">
                   <Avatar />
                 </v-col>
-                <v-col cols="5">
+                <v-col cols="6">
                   <h5>{{ comment.nameL }}</h5>
                   <p style="font-size: 15px;">Je propose :</p>
                 </v-col>
-                <v-col cols="3">
+                <v-col cols="4">
                   <h1>{{ comment.montant }} $</h1>
                 </v-col>
                 <v-divider></v-divider>
               </v-row>
             </v-container>
-          </v-card-action>
+          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
@@ -90,7 +91,9 @@ export default ({
       newComment: '',
       user: '',
       userL: '',
-      sortedComments: []
+      sortedComments: [],
+      idLive: '',
+      varTemp: ''
     }
   },
   // components: { navBar, Main },
@@ -110,6 +113,7 @@ export default ({
         const livepro = response.data[3]
         console.log('ceci est le livepro', livepro)
         this.nom = livepro.nom,
+        this.idLive = livepro.idLive
         this.description = livepro.description
         this.prixInit = livepro.prixInit
         const imageLinks = livepro.image.split(',');
@@ -124,8 +128,14 @@ export default ({
       }
     },
     sendComment() {
-      socket.emit('newComment', { user: this.user, montant: this.newComment, nameL: this.userL });
-      this.newComment = ''
+      if (parseInt(this.newComment) > parseInt(this.prixInit)) {
+        socket.emit('newComment', { user: this.user, montant: this.newComment, nameL: this.userL });
+        socket.emit('updatePrice', { newPrice: this.newComment, idLive: this.idLive });
+        this.newComment = ''
+      }
+      else {
+        alert('Le prix proposé doit être supérieur au prix initial.');
+      }
 
     }
   },
@@ -141,6 +151,9 @@ export default ({
         console.log(err)
       }
     }
+    socket.on('updatePrice', (newPrice) => {
+      this.prixInit = newPrice;
+    });
   },
   components: {
     Avatar
