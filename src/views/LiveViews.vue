@@ -10,8 +10,8 @@
 
               <v-carousel class="mt-2" height="350" style="border-top-left-radius:15px;border-top-right-radius:15px;"
                 hide-delimiters>
-                <v-carousel-item></v-carousel-item>
-                <!-- <v-carousel-item v-for="(item, i) in items" :key="i" :src="item.src"></v-carousel-item> -->
+                <!-- <v-carousel-item></v-carousel-item> -->
+                <v-carousel-item v-for="(item, i) in image" :key="i" :src="`http://localhost:5000/${item.src}`" style="width: 350px;"></v-carousel-item>
               </v-carousel>
               <h3
                 style="color: white; background-color: #e91e63; font-size: 20px; padding: 20px; border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
@@ -44,11 +44,11 @@
           </v-card-title>
           <v-card-action>
             <v-container>
-              <v-row v-for="comment in comments" :key="comment.id">
+              <v-row v-for="comment in sortedComments" :key="comment.id">
                 <v-col cols="2">
                   <Avatar />
                 </v-col>
-                <v-col cols="6.5">
+                <v-col cols="5">
                   <h5>{{ comment.nameL }}</h5>
                   <p style="font-size: 15px;">Je propose :</p>
                 </v-col>
@@ -89,7 +89,8 @@ export default ({
       comments: [],
       newComment: '',
       user: '',
-      userL: ''
+      userL: '',
+      sortedComments: []
     }
   },
   // components: { navBar, Main },
@@ -102,53 +103,21 @@ export default ({
       this.timer = setInterval(() => {
         this.updateCountdown();
       }, 1000);
-    }, updateCountdown() {
-      let time = this.countdown.split(':');
-      let hours = parseInt(time[0]);
-      let minutes = parseInt(time[1]);
-      let seconds = parseInt(time[2]);
-
-
-
-      if (hours === 0 && minutes === 0 && seconds === 0) {
-        clearInterval(this.timer);
-        this.class = alert
-        // alert('kely sisa')
-        // Ajouter ici des actions à effectuer lorsque le compte à rebours se termine
-      } else {
-        if (seconds > 0) {
-          seconds--;
-        } else {
-          seconds = 59;
-          if (minutes > 0) {
-            minutes--;
-          } else {
-            minutes = 59;
-            if (hours > 0) {
-              hours--;
-            }
-          }
-        }
-        this.countdown = `${this.formatTime(hours)}:${this.formatTime(minutes)}:${this.formatTime(seconds)}`;
-      }
-    },
-    formatTime(time) {
-      return time < 10 ? `0${time}` : time;
     },
     async getLive() {
       const response = await axios.get('http://localhost:5000/admin/getlive')
       try {
-        const livepro = response.data[2]
-        console.log(livepro)
+        const livepro = response.data[3]
+        console.log('ceci est le livepro', livepro)
         this.nom = livepro.nom,
-          this.description = livepro.description
+        this.description = livepro.description
         this.prixInit = livepro.prixInit
-        // const images = livepro.image
-        // const items = images.map((imagePath)=>{
-        //   return {src: imagePath}
-        // })
-        // this.image = items
-        // console.log(images)
+        const imageLinks = livepro.image.split(',');
+        const items = imageLinks.map((imagePath) => {
+          return { src: imagePath.trim() }; // Utilisez trim() pour supprimer les espaces éventuels autour des liens
+        });
+        this.image = items;
+        console.log('Liens des images:', imageLinks);
       }
       catch (err) {
         console.log(err)
@@ -156,18 +125,18 @@ export default ({
     },
     sendComment() {
       socket.emit('newComment', { user: this.user, montant: this.newComment, nameL: this.userL });
-      
+      this.newComment = ''
+
     }
   },
   mounted() {
-    // this.startCountdown();
     this.getLive()
     const userData = localStorage.getItem('userData');
     if (userData) {
       try {
         const userObject = JSON.parse(userData)
         this.user = userObject.IdUser
-        this.userL = userObject.name // Assurez-vous d'attribuer correctement le nom d'utilisateur ici
+        this.userL = userObject.name
       } catch (err) {
         console.log(err)
       }
@@ -179,11 +148,13 @@ export default ({
   created() {
     socket.on('newComment', (comment) => {
       this.comments.push(comment)
+      this.sortedComments = [...this.comments].sort((a, b) => new Date(b.date) - new Date(a.date));
       localStorage.setItem('comments', JSON.stringify(this.comments));
     })
     const savedComments = localStorage.getItem('comments');
     if (savedComments) {
       this.comments = JSON.parse(savedComments);
+      this.sortedComments = [...this.comments].sort((a, b) => new Date(b.date) - new Date(a.date));
     }
   }
 })
