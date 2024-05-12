@@ -1,9 +1,9 @@
 <template>
   <v-container class="mb-9">
-    <h1 style="margin-top: -45px;" id="produits">Live<span style="color: red;">.</span></h1>
+    <h1 style="margin-top: -15px; font-size: 20px; color: #e91e63;" id="produits">En direct<span style="color: black;">.</span></h1>
     <v-row>
       <v-col cols="8">
-        <v-card class="mt-5" style="border-radius: 20px; width: 100%; background-color: #d9d9d9;">
+        <v-card elevation="5" class="mt-8" style="border-radius: 20px; width: 100%; background-color: #e4e4e6;">
           <v-row>
             <v-col cols="5.5" class="ml-9">
               <h5>{{ countdown }}</h5>
@@ -15,8 +15,8 @@
                   style="width: 350px;"></v-carousel-item>
               </v-carousel>
               <h3
-                style="color: white; background-color: #e91e63; font-size: 20px; padding: 20px; border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
-                Prix Actuelle: <span class="ml-5" >{{ prixInit }} $</span></h3>
+                style="color: white; background-color: #e91e63; font-size: 20px; padding: 10px 15px; border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
+                Prix Actuelle: <span class="ml-5" >{{ prixInit }} €</span></h3>
             </v-col>
             <v-col cols="5.5">
               <h1 style="color: #e91e63;" class="mt-5">{{ nom }}</h1>
@@ -25,7 +25,7 @@
               <h3 style="margin-top: 78px;">On n'attends plus que vous:</h3>
               <v-row>
                 <v-col cols="9">
-                  <v-text-field :rules="rules" class="mt-2" v-mask="['### ### ###']" label="Votre prix(en MGA)"
+                  <v-text-field :rules="rules" class="mt-2" v-mask="['### ### ###']" label="Votre prix(en Euro)"
                     style="border-radius: 30px;" v-model="newComment" type="number" solo></v-text-field>
                 </v-col>
                 <v-col cols="1" class="mt-2">
@@ -38,7 +38,8 @@
       </v-col>
       <v-col cols="4">
         <v-card
-          style="background-color: #d9d9d9; width: 100%; padding-right: -50px; border-radius: 15px; height: 470px;overflow-y: auto"
+        elevation="5"
+          style="background-color: #e4e4e6; width: 100%; padding-right: -50px; border-radius: 15px; height: 470px;overflow-y: auto"
           class="mt-2">
           <v-card-title class="ml-10" style="color: #e91e63;">
             Commentaire en direct
@@ -54,7 +55,8 @@
                   <p style="font-size: 15px;">Je propose :</p>
                 </v-col>
                 <v-col cols="4">
-                  <h1>{{ comment.montant }} $</h1>
+                <p></p>
+                  <h1 style="font-size: 16px;">{{ comment.montant }} €</h1>
                 </v-col>
                 <v-divider></v-divider>
               </v-row>
@@ -172,4 +174,6 @@ export default ({
   }
 })
 </script>
-<style></style>
+<style>
+
+</style>
