@@ -2,8 +2,8 @@
     <v-row>
         <v-col cols="7">
             <br><br><br>
-            <!-- <p class="bigTitle" style="margin-top: 100px;"><b>Plongez dans l'excitation des Enchères :</b></p> -->
-            <p class="bigTitle typewriter">{{ typewriterText }}</p>
+            <!-- <p class="bigTitle" style="margin-top: 100px;"><b>:</b></p> -->
+            <p class="bigTitle typewriter">Plongez dans l'excitation des Enchères </p>
             <p class="mt-10" style="color: #666666;">
                 Découvrez des trésors uniques sur notre plateforme en ligne
             </p>
@@ -80,4 +80,5 @@ export default {
   overflow: hidden; /* Masquer le texte qui déborde */
   margin: 0 auto; /* Centrer le texte horizontalement */
 }
+
 </style>
