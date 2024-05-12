@@ -1,14 +1,11 @@
 <template>
   <v-container>
-    <h1 class="gradient-text"> Bonjour {{ user }}</h1>
-    <h1 class="mt-15 pro" id="produits">En vente prochainement </h1>
-    <caroussel class="mt-5"/>
-    <h1 class="mt-10">Nos articles disponibles</h1>
-    <v-row class="mt-5 pb-10" style="margin-bottom: 10px; padding-bottom: 10px;">
-      <v-col v-for="product in products" :key="product.IdPro" cols="4">
+    <center><h1 class="title-Card" style="margin-top: -10px;color: #e91e63; font-size: 1.7vw;">Nos articles disponibles</h1></center>
+    <v-row class="mt-5 pb-10 container-Card" style="clmargin-bottom: 10px; padding-bottom: 10px;">
+      <v-col v-for="product in products" :key="product.IdPro" cols="12" sm="6" md="4" lg="3">
         <v-hover v-slot="{ hover }">
-          <v-card color="grey lighten-4" max-width="350">
-            <v-img :aspect-ratio="16 / 16" :src="`http://localhost:5000/${product.img}`">
+          <v-card color="grey lighten-4">
+            <v-img :aspect-ratio="16 / 9" :src="`http://localhost:5000/${product.img}`">
               <v-expand-transition>
                 <div v-if="hover" class="d-flex transition-fast-in-fast-out pink v-card--reveal text-h2 white--text"
                   style="height: 100%;">
@@ -17,7 +14,7 @@
               </v-expand-transition>
             </v-img>
             <v-card-text class="pt-6" style="position: relative;">
-              <h3 class="text-h5 font-weight-light pink--text mb-2">
+              <h3 class="font-weight-bold mb-2" color="dark" style="font-size:1vw;">
                 <b>{{ product.NomPro }}</b>
               </h3>
               <div class="">
@@ -28,7 +25,9 @@
         </v-hover>
       </v-col>
     </v-row>
-    <h1> Nos partenaires </h1>
+    <center><h1 class="mt-5 pro Title-slide" id="produits" style="color: #e91e63; font-size: 1.7vw;">En vente prochainement </h1></center>
+    <caroussel class="mt-8"/>
+    <center><h1 class="mt-7 pro Title-partenaire" style="color: #e91e63; font-size: 1.7vw;">Nos partenaires </h1></center>
   </v-container>
 </template>
 
@@ -85,17 +84,6 @@ export default {
   width: 100%;
 }
 
-::-webkit-scrollbar {
-  width: 7px;
-  height: 10px;
-  background-color: #F5F5F5;
-  color: pink;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: pink;
-}
-
 .gradient-text {
   margin-top: -35px;
   font-size: 3rem;
@@ -103,6 +91,36 @@ export default {
   background: linear-gradient(to right, #4e83ef, #9b72cb, #d96570);
   position: absolute;
   background-clip: text;
+}
+
+@media only screen and (max-width: 360px) {
+  .title-Card {
+    font-size: 4vw !important; /* Taille du texte pour les écrans de petite taille */
+  }
+  .Title-slide {
+    font-size: 4vw !important; /* Taille du texte pour les écrans de petite taille */
+  }
+  .Title-partenaire {
+    font-size: 4vw !important; /* Taille du texte pour les écrans de petite taille */
+  }
+}
+
+@media  screen and (min-width: 768px) and (max-width: 991px) {
+  .v-card__title {
+    font-size: 1.8vw;
+  }
+}
+
+@media  screen and (min-width: 992px) and (max-width: 1199px) {
+  .v-card__title {
+    font-size: 2vw;
+  }
+}
+
+@media  (min-width: 1200px) {
+  .v-card__title {
+    font-size: 2.5vw;
+  }
 }
 
 </style>

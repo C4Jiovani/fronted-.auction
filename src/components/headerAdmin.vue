@@ -98,18 +98,7 @@
                     transition="scale-transition" width="100" />
             </div>
             
-            <router-link style="font-size: 15px;text-decoration: none; color: black; opacity: 80%; margin-left: 610px" class="mt-4 font-weight-bold"
-                to="/accueil">
-                <p class="elements"> Accueil</p>
-            </router-link>
-            <router-link style="font-size: 15px; text-decoration: none; color: black; opacity: 80%; margin-left: 60px" class="mt-4 font-weight-bold"
-                to="live">
-                <p class="elements"> En direct</p>
-            </router-link>
-            <router-link style="font-size: 15px; text-decoration: none; color: black; opacity: 80%; margin-left: 60px" class="mt-4 font-weight-bold"
-                to="history">
-                <p class="elements">Contact</p>
-            </router-link>
+            
             <v-spacer></v-spacer>
             <v-badge bordered dense dot :value="badge" class="mr-10" overlap color="pink">
                 <v-icon @click.stop="reverse()">mdi-bell</v-icon>

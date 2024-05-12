@@ -2,7 +2,7 @@
     <div class="bg">
         <div class="content">
             <Main />
-            <v-container>
+            <v-container >
                 <v-row>
                     <v-col cols="0">
                     </v-col>
@@ -52,8 +52,11 @@ export default {
 </script>
 <style scoped>
 .bg {
-    background-image: url('../assets/bing.jpeg');
+    //background-image: url('../assets/bing.jpeg');
     background-repeat: no-repeat;
     background-size: cover;
+}
+@media only screen and (min-width:300px ){
+    
 }
 </style>

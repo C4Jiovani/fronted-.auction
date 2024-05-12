@@ -1,20 +1,16 @@
 <template>
     <v-container>
-        <Main></Main>
+        <headerAdmin/>
         <v-container>
             <div style="margin-left: 110px;">
-                <h1 class="mt-10" append-icon="mdi-bell">Notification</h1>
-
+                <h1 class="mt-5" append-icon="mdi-bell" style="font-size: 25px;">Notification</h1>
                 <v-dialog v-model="dialog" width="500">
                     <template v-slot:activator="{ on, attrs }">
                         <v-btn color="#ab0767" dark v-bind="attrs" v-on="on" class="mt-5 text-capitalize"
                             style="color: white;">
                             <b>Ajouter produit</b>
                         </v-btn>
-                        <v-btn color="#ab0767" dark v-bind="attrs" v-on="on" class="mt-5 text-capitalize"
-                            style="color: white;">
-                            <b>Ajouter produit</b>
-                        </v-btn>
+                        
                     </template>
 
                     <v-card>
@@ -100,13 +96,13 @@
 </template>
 
 <script>
-import Main from '@/components/Main.vue';
+import headerAdmin from '@/components/headerAdmin.vue';
 import Avatar from '@/components/Avatar.vue';
 import axios from 'axios';
 
 export default {
     name: 'AdminDash',
-    components: { Main, Avatar },
+    components: { headerAdmin, Avatar },
     data() {
         return {
             selectedItem: null,
