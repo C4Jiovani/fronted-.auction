@@ -54,7 +54,7 @@
                   <p style="font-size: 15px;">Je propose :</p>
                 </v-col>
                 <v-col cols="4">
-                  <h1>{{ comment.montant }} $</h1>
+                  <h2>{{ comment.montant }} $</h2>
                 </v-col>
                 <v-divider></v-divider>
               </v-row>
