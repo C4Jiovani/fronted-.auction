@@ -44,7 +44,7 @@
                             connecter</b></v-btn>
                 </v-form>
                 <div style="margin-top: 20px;">
-                    <a style="color: black; opacity: 64%;" @click="forgetPass()">Mots de passe oublié?</a>
+                    <a class="Forgot-password"   style="color: black;font-size:14px; opacity: 64%;" @click="forgetPass()">Mots de passe oublié?</a>
                 </div>
             </v-tab-item>
 
@@ -160,3 +160,9 @@ export default {
 };
 
 </script>
+
+<style scoped>
+    .Forgot-password:hover{
+        text-decoration: underline;
+    }
+</style>

@@ -93,7 +93,7 @@ export default {
   background-clip: text;
 }
 
-@media only screen and (max-width: 360px) {
+@media only screen and (max-width: 700px) {
   .title-Card {
     font-size: 4vw !important; /* Taille du texte pour les écrans de petite taille */
   }
