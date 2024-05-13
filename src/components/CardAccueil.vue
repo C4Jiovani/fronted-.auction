@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <center><h1 class="title-Card" style="margin-top: -10px;color: #e91e63; font-size: 1.7vw;">Nos articles disponibles</h1></center>
-    <v-row class="mt-5 pb-10 container-Card" style="clmargin-bottom: 10px; padding-bottom: 10px;">
+    <center><h1 class="title-Card" style="margin-top: -10px;color: #e91e63; font-size: 1.7vw;">Articles recents</h1></center>
+    <v-row class="mt-5 pb-10 container-Card" style="margin-bottom: 10px; padding-bottom: 10px;">
       <v-col v-for="product in products" :key="product.IdPro" cols="12" sm="6" md="4" lg="3">
         <v-hover v-slot="{ hover }">
           <v-card color="grey lighten-4">

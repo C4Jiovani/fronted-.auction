@@ -52,7 +52,7 @@ export default {
 </script>
 <style scoped>
 .bg {
-    //background-image: url('../assets/bing.jpeg');
+    /* background-image: url('../assets/bing.jpeg'); */
     background-repeat: no-repeat;
     background-size: cover;
 }

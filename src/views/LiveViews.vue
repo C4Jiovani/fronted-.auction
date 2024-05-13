@@ -1,6 +1,17 @@
 <template>
   <v-container class="mb-9">
-    <h1 style="margin-top: -15px; font-size: 20px; color: #e91e63;" id="produits">En direct<span style="color: black;">.</span></h1>
+    <v-snackbar v-model="snackbar" top color="warning" :timeout="timeout">
+      <b><v-icon class="mr-5">mdi-alert</v-icon>{{ text }}</b>
+      <template>
+      </template>
+    </v-snackbar>
+    <v-snackbar v-model="snackbarTrue" top color="success" :timeout="timeout">
+      <b><v-icon class="mr-5">mdi-check</v-icon>{{ textTrue }}</b>
+      <template>
+      </template>
+    </v-snackbar>
+    <h1 style="margin-top: -15px; font-size: 20px; color: #e91e63;" id="produits">En direct<span
+        style="color: black;">.</span></h1>
     <v-row>
       <v-col cols="8">
         <v-card elevation="5" class="mt-8" style="border-radius: 20px; width: 100%; background-color: #e4e4e6;">
@@ -16,7 +27,7 @@
               </v-carousel>
               <h3
                 style="color: white; background-color: #e91e63; font-size: 20px; padding: 10px 15px; border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
-                Prix Actuelle: <span class="ml-5" >{{ prixInit }} €</span></h3>
+                Prix Actuelle: <span class="ml-5">{{ prixInit }} €</span></h3>
             </v-col>
             <v-col cols="5.5">
               <h1 style="color: #e91e63;" class="mt-5">{{ nom }}</h1>
@@ -37,8 +48,7 @@
         </v-card>
       </v-col>
       <v-col cols="4">
-        <v-card
-        elevation="5"
+        <v-card elevation="5"
           style="background-color: #e4e4e6; width: 100%; padding-right: -50px; border-radius: 15px; height: 470px;overflow-y: auto"
           class="mt-2">
           <v-card-title class="ml-10" style="color: #e91e63;">
@@ -55,8 +65,9 @@
                   <p style="font-size: 15px;">Je propose :</p>
                 </v-col>
                 <v-col cols="4">
-                <p></p>
+                  <p></p>
                   <h1 style="font-size: 16px;">{{ comment.montant }} €</h1>
+                  <!-- <h2>{{ comment.montant }} $</h2> -->
                 </v-col>
                 <v-divider></v-divider>
               </v-row>
@@ -95,14 +106,18 @@ export default ({
       userL: '',
       sortedComments: [],
       idLive: '',
-      varTemp: ''
+      varTemp: '',
+      snackbar: false,
+      text: 'Le prix proposé doit etre superieur au prix initial',
+      timeout: 3000,
+      snackbarTrue: false,
+      textTrue: 'Valeur ajouté avec success',
     }
   },
   // components: { navBar, Main },
   methods: {
-    test() {
-      // socket.emit('comment', { message: 'Mon nouveau commentaire' });
-      alert('cliked')
+    sortCommentsByDate() {
+      this.sortedComments = [...this.comments].sort((a, b) => new Date(b.date) - new Date(a.date));
     },
     startCountdown() {
       this.timer = setInterval(() => {
@@ -115,7 +130,7 @@ export default ({
         const livepro = response.data[3]
         console.log('ceci est le livepro', livepro)
         this.nom = livepro.nom,
-        this.idLive = livepro.idLive
+          this.idLive = livepro.idLive
         this.description = livepro.description
         this.prixInit = livepro.prixInit
         const imageLinks = livepro.image.split(',');
@@ -133,10 +148,12 @@ export default ({
       if (parseInt(this.newComment) > parseInt(this.prixInit)) {
         socket.emit('newComment', { user: this.user, montant: this.newComment, nameL: this.userL });
         socket.emit('updatePrice', { newPrice: this.newComment, idLive: this.idLive });
-        this.newComment = ''
+        this.snackbarTrue = true,
+          this.newComment = ''
       }
       else {
-        alert('Le prix proposé doit être supérieur au prix initial.');
+        // alert('Le prix proposé doit être supérieur au prix initial.');
+        this.snackbar = true
       }
 
     }
@@ -162,18 +179,17 @@ export default ({
   },
   created() {
     socket.on('newComment', (comment) => {
-      this.comments.push(comment)
-      this.sortedComments = [...this.comments].sort((a, b) => new Date(b.date) - new Date(a.date));
+      this.comments.push(comment);
+      this.sortCommentsByDate();
       localStorage.setItem('comments', JSON.stringify(this.comments));
-    })
+    });
+
     const savedComments = localStorage.getItem('comments');
     if (savedComments) {
       this.comments = JSON.parse(savedComments);
-      this.sortedComments = [...this.comments].sort((a, b) => new Date(b.date) - new Date(a.date));
+      this.sortCommentsByDate(); // Appel de la fonction de tri au chargement des commentaires sauvegardés
     }
-  }
+  },
 })
 </script>
-<style>
-
-</style>
+<style></style>
