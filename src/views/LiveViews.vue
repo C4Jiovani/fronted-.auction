@@ -1,88 +1,92 @@
 <template>
-  <v-container class="mb-9">
-    <v-snackbar v-model="snackbar" top color="warning" :timeout="timeout">
-      <b><v-icon class="mr-5">mdi-alert</v-icon>{{ text }}</b>
-      <template>
-      </template>
-    </v-snackbar>
-    <v-snackbar v-model="snackbarTrue" top color="success" :timeout="timeout">
-      <b><v-icon class="mr-5">mdi-check</v-icon>{{ textTrue }}</b>
-      <template>
-      </template>
-    </v-snackbar>
-    <h1 style="margin-top: -15px; font-size: 20px; color: #e91e63;" id="produits">En direct<span
-        style="color: black;">.</span></h1>
-    <v-row>
-      <v-col cols="8">
-        <v-card elevation="5" class="mt-8" style="border-radius: 20px; width: 100%; background-color: #e4e4e6;">
-          <v-row>
-            <v-col cols="5.5" class="ml-9">
-              <h5>{{ countdown }}</h5>
+  <div>
+    <v-container class="mb-9" v-if="!isTimerExpired">
+      <v-snackbar v-model="snackbar" top color="warning" :timeout="timeout">
+        <b><v-icon class="mr-5">mdi-alert</v-icon>{{ text }}</b>
+        <template>
+        </template>
+      </v-snackbar>
+      <v-snackbar v-model="snackbarTrue" top color="success" :timeout="timeout">
+        <b><v-icon class="mr-5">mdi-check</v-icon>{{ textTrue }}</b>
+        <template>
+        </template>
+      </v-snackbar>
+      <h1 style="margin-top: -15px; font-size: 20px; color: #e91e63;" id="produits">En direct<span
+          style="color: black;">.</span></h1>
+      <v-row>
+        <v-col cols="8">
+          <v-card elevation="5" class="mt-8" style="border-radius: 20px; width: 100%; background-color: #e4e4e6;">
+            <v-row>
+              <v-col cols="5.5" class="ml-9">
+                <h5>{{ countdown }}</h5>
 
-              <v-carousel class="mt-2" height="350" style="border-top-left-radius:15px;border-top-right-radius:15px;"
-                hide-delimiters>
-                <!-- <v-carousel-item></v-carousel-item> -->
-                <v-carousel-item v-for="(item, i) in image" :key="i" :src="`http://localhost:5000/${item.src}`"
-                  style="width: 350px;"></v-carousel-item>
-              </v-carousel>
-              <h3
-                style="color: white; background-color: #e91e63; font-size: 20px; padding: 10px 15px; border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
-                Prix Actuelle: <span class="ml-5">{{ prixInit }} €</span></h3>
-            </v-col>
-            <v-col cols="5.5">
-              <h1 style="color: #e91e63;" class="mt-5">{{ nom }}</h1>
-              <p class="mt-5">{{ description }}</p>
-              <v-spacer></v-spacer>
-              <h3 style="margin-top: 78px;">On n'attends plus que vous:</h3>
-              <v-row>
-                <v-col cols="9">
-                  <v-text-field :rules="rules" class="mt-2" v-mask="['### ### ###']" label="Votre prix(en Euro)"
-                    style="border-radius: 30px;" v-model="newComment" type="number" solo></v-text-field>
-                </v-col>
-                <v-col cols="1" class="mt-2">
-                  <v-icon @click="sendComment" class="mt-3">mdi-send</v-icon>
-                </v-col>
-              </v-row>
-            </v-col>
-          </v-row>
-        </v-card>
-      </v-col>
-      <v-col cols="4">
-        <v-card elevation="5"
-          style="background-color: #e4e4e6; width: 100%; padding-right: -50px; border-radius: 15px; height: 470px;overflow-y: auto"
-          class="mt-2">
-          <v-card-title class="ml-10" style="color: #e91e63;">
-            Commentaire en direct
-          </v-card-title>
-          <v-card-actions>
-            <v-container>
-              <v-row v-for="comment in sortedComments" :key="comment.id">
-                <v-col cols="2">
-                  <Avatar />
-                </v-col>
-                <v-col cols="6">
-                  <h5>{{ comment.nameL }}</h5>
-                  <p style="font-size: 15px;">Je propose :</p>
-                </v-col>
-                <v-col cols="4">
-                  <p></p>
-                  <h1 style="font-size: 16px;">{{ comment.montant }} €</h1>
-                  <!-- <h2>{{ comment.montant }} $</h2> -->
-                </v-col>
-                <v-divider></v-divider>
-              </v-row>
-            </v-container>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+                <v-carousel class="mt-2" height="350" style="border-top-left-radius:15px;border-top-right-radius:15px;"
+                  hide-delimiters>
+                  <!-- <v-carousel-item></v-carousel-item> -->
+                  <v-carousel-item v-for="(item, i) in image" :key="i" :src="`http://localhost:5000/${item.src}`"
+                    style="width: 350px;"></v-carousel-item>
+                </v-carousel>
+                <h3
+                  style="color: white; background-color: #e91e63; font-size: 20px; padding: 10px 15px; border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
+                  Prix Actuelle: <span class="ml-5">{{ prixInit }} €</span></h3>
+              </v-col>
+              <v-col cols="5.5">
+                <h1 style="color: #e91e63;" class="mt-5">{{ nom }}</h1>
+                <p class="mt-5">{{ description }}</p>
+                <v-spacer></v-spacer>
+                <h3 style="margin-top: 78px;">On n'attends plus que vous:</h3>
+                <v-row>
+                  <v-col cols="9">
+                    <v-text-field :rules="rules" class="mt-2" v-mask="['### ### ###']" label="Votre prix(en Euro)"
+                      style="border-radius: 30px;" v-model="newComment" type="number" solo></v-text-field>
+                  </v-col>
+                  <v-col cols="1" class="mt-2">
+                    <v-icon @click="sendComment" class="mt-3">mdi-send</v-icon>
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+        <v-col cols="4">
+          <v-card elevation="5"
+            style="background-color: #e4e4e6; width: 100%; padding-right: -50px; border-radius: 15px; height: 470px;overflow-y: auto"
+            class="mt-2">
+            <v-card-title class="ml-10" style="color: #e91e63;">
+              Commentaire en direct
+            </v-card-title>
+            <v-card-actions>
+              <v-container>
+                <v-row v-for="comment in sortedComments" :key="comment.id">
+                  <v-col cols="2">
+                    <Avatar />
+                  </v-col>
+                  <v-col cols="6">
+                    <h5>{{ comment.nameL }}</h5>
+                    <p style="font-size: 15px;">Je propose :</p>
+                  </v-col>
+                  <v-col cols="4">
+                    <p></p>
+                    <h1 style="font-size: 16px;">{{ comment.montant }} €</h1>
+                    <!-- <h2>{{ comment.montant }} $</h2> -->
+                  </v-col>
+                  <v-divider></v-divider>
+                </v-row>
+              </v-container>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+    <h1 v-else>Live terminé</h1>
+  </div>
 </template>
 <script>
 import axios from 'axios';
 import Avatar from '@/components/Avatar.vue';
 import io from 'socket.io-client'
 const socket = io('http://localhost:5000')
+// const STORAGE_KEY = 'countdownTime';
 
 export default ({
   name: 'nodtiPage',
@@ -93,8 +97,6 @@ export default ({
         v => !!v || 'Le prix est obligatoire',
         v => /^\d+$/.test(v) || 'Le prix doit être un nombre'
       ],
-      countdown: '00:00:05',
-      timer: null,
       class: null,
       nom: '',
       description: '',
@@ -112,6 +114,9 @@ export default ({
       timeout: 3000,
       snackbarTrue: false,
       textTrue: 'Valeur ajouté avec success',
+      countdown: '00:00:10', // Initial countdown value (5 seconds)
+      timer: null, // Timer variable
+      isTimerExpired: false,
     }
   },
   // components: { navBar, Main },
@@ -119,18 +124,13 @@ export default ({
     sortCommentsByDate() {
       this.sortedComments = [...this.comments].sort((a, b) => new Date(b.date) - new Date(a.date));
     },
-    startCountdown() {
-      this.timer = setInterval(() => {
-        this.updateCountdown();
-      }, 1000);
-    },
     async getLive() {
       const response = await axios.get('http://localhost:5000/admin/getlive')
       try {
         const livepro = response.data[3]
         console.log('ceci est le livepro', livepro)
         this.nom = livepro.nom,
-          this.idLive = livepro.idLive
+        this.idLive = livepro.idLive
         this.description = livepro.description
         this.prixInit = livepro.prixInit
         const imageLinks = livepro.image.split(',');
@@ -139,6 +139,7 @@ export default ({
         });
         this.image = items;
         console.log('Liens des images:', imageLinks);
+        this.startCountdown();
       }
       catch (err) {
         console.log(err)
@@ -155,8 +156,37 @@ export default ({
         // alert('Le prix proposé doit être supérieur au prix initial.');
         this.snackbar = true
       }
+    },
+    startCountdown() {
+      this.timer = setInterval(() => {
+        const timeParts = this.countdown.split(':');
+        let hours = parseInt(timeParts[0]);
+        let minutes = parseInt(timeParts[1]);
+        let seconds = parseInt(timeParts[2]);
 
-    }
+        if (hours === 0 && minutes === 0 && seconds === 0) {
+          // Timer has expired
+          clearInterval(this.timer);
+          this.isTimerExpired = true;
+          // You can add logic here to handle timer expiration
+        } else {
+          if (seconds > 0) {
+            seconds--;
+          } else {
+            if (minutes > 0) {
+              minutes--;
+              seconds = 59;
+            } else {
+              hours--;
+              minutes = 59;
+              seconds = 59;
+            }
+          }
+          // Update the countdown display
+          this.countdown = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+      }, 1000); // Update every second (1000 ms)
+    },
   },
   mounted() {
     this.getLive()
