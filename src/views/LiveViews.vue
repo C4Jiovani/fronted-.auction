@@ -58,6 +58,7 @@ import axios from 'axios';
 import Avatar from '@/components/Avatar.vue';
 import io from 'socket.io-client'
 const socket = io('http://localhost:5000')
+// const STORAGE_KEY = 'countdownTime';
 
 export default ({
   name: 'nodtiPage',
@@ -68,8 +69,6 @@ export default ({
         v => !!v || 'Le prix est obligatoire',
         v => /^\d+$/.test(v) || 'Le prix doit être un nombre'
       ],
-      countdown: '00:00:05',
-      timer: null,
       class: null,
       nom: '',
       description: '',
@@ -86,7 +85,10 @@ export default ({
       text: 'Le prix proposé doit être supérieur au prix initial',
       timeout: 3000,
       snackbarTrue: false,
-      textTrue: 'Valeur ajoutée avec succès',
+      textTrue: 'Valeur ajouté avec success',
+      countdown: '00:00:10', // Initial countdown value (5 seconds)
+      timer: null, // Timer variable
+      isTimerExpired: false,
     }
   },
   // components: { navBar, Main },
@@ -94,18 +96,13 @@ export default ({
     sortCommentsByDate() {
       this.sortedComments = [...this.comments].sort((a, b) => new Date(b.date) - new Date(a.date));
     },
-    startCountdown() {
-      this.timer = setInterval(() => {
-        this.updateCountdown();
-      }, 1000);
-    },
     async getLive() {
       const response = await axios.get('http://localhost:5000/admin/getlive')
       try {
         const livepro = response.data[3]
         console.log('ceci est le livepro', livepro)
         this.nom = livepro.nom,
-          this.idLive = livepro.idLive
+        this.idLive = livepro.idLive
         this.description = livepro.description
         this.prixInit = livepro.prixInit
         const imageLinks = livepro.image.split(',');
@@ -114,6 +111,7 @@ export default ({
         });
         this.image = items;
         console.log('Liens des images:', imageLinks);
+        this.startCountdown();
       }
       catch (err) {
         console.log(err)
@@ -130,8 +128,37 @@ export default ({
         // alert('Le prix proposé doit être supérieur au prix initial.');
         this.snackbar = true
       }
+    },
+    startCountdown() {
+      this.timer = setInterval(() => {
+        const timeParts = this.countdown.split(':');
+        let hours = parseInt(timeParts[0]);
+        let minutes = parseInt(timeParts[1]);
+        let seconds = parseInt(timeParts[2]);
 
-    }
+        if (hours === 0 && minutes === 0 && seconds === 0) {
+          // Timer has expired
+          clearInterval(this.timer);
+          this.isTimerExpired = true;
+          // You can add logic here to handle timer expiration
+        } else {
+          if (seconds > 0) {
+            seconds--;
+          } else {
+            if (minutes > 0) {
+              minutes--;
+              seconds = 59;
+            } else {
+              hours--;
+              minutes = 59;
+              seconds = 59;
+            }
+          }
+          // Update the countdown display
+          this.countdown = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+      }, 1000); // Update every second (1000 ms)
+    },
   },
   mounted() {
     this.getLive()
