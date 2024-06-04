@@ -1,9 +1,12 @@
 <template>
   <div>
-    <!-- Bouton pour afficher les liens sur les petits écrans -->
-
-    <!-- Barre de navigation pour les grands écrans -->
+    <!-- Barre de navigation -->
     <v-app-bar app color="darken-3" default elevation="0">
+      <!-- Menu bar icon for small screens -->
+      <v-btn icon @click="toggleLinks" class="d-block d-md-none">
+        <v-icon>mdi-menu</v-icon>
+      </v-btn>
+      <!-- Logo -->
       <div class="d-flex align-center">
         <v-img
           alt="auction logo"
@@ -14,63 +17,19 @@
           width="100"
         />
       </div>
-      <div>
-        <v-btn
-          @click="toggleLinks"
-          class="d-block d-md-none"
-          color="primary"
-          dark
-        >
-          {{ showLinks ? "Masquer les liens" : "Afficher les liens" }}
-        </v-btn>
-      </div>
+
       <!-- Liens de navigation pour les grands écrans -->
       <div
         v-show="showLinks || !$vuetify.breakpoint.xsOnly"
-        class="d-none d-md-flex"
+        class="d-none d-md-flex ml-auto"
       >
-        <router-link
-          style="
-            font-size: 15px;
-            text-decoration: none;
-            color: black;
-            opacity: 80%;
-            margin-left: 610px;
-          "
-          class="mt-4 font-weight-bold"
-          to="/accueil"
-        >
-          <p class="elements">Accueil</p>
-        </router-link>
-        <router-link
-          style="
-            font-size: 15px;
-            text-decoration: none;
-            color: black;
-            opacity: 80%;
-            margin-left: 60px;
-          "
-          class="mt-4 font-weight-bold"
-          to="live"
-        >
-          <p class="elements">En direct</p>
-        </router-link>
-        <router-link
-          style="
-            font-size: 15px;
-            text-decoration: none;
-            color: black;
-            opacity: 80%;
-            margin-left: 60px;
-          "
-          class="mt-4 font-weight-bold"
-          to="history"
-        >
-          <p class="elements">Contact</p>
-        </router-link>
+        <router-link class="nav-link" to="/accueil"> Accueil </router-link>
+        <router-link class="nav-link" to="live"> En direct </router-link>
+        <router-link class="nav-link" to="history"> Contact </router-link>
       </div>
 
       <v-spacer></v-spacer>
+
       <!-- Avatar et bouton de déconnexion -->
       <v-badge
         bordered
@@ -84,79 +43,55 @@
         <v-icon @click.stop="reverse()">mdi-bell</v-icon>
       </v-badge>
       <Avatar />
-      <template>
-        <div class="text-center">
-          <v-menu offset-y>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                :ripple="false"
-                plain
-                v-bind="attrs"
-                v-on="on"
-                class="text-capitalize"
-              >
-                {{ nomL }}
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item>
-                <v-list-item-title
-                  @click.stop="dialogCompte = true"
-                  style="cursor: pointer"
-                >
-                  <v-icon>mdi-account</v-icon>Mon compte
-                </v-list-item-title>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-title
-                  @click.stop="dialogCompte = true"
-                  style="cursor: pointer"
-                >
-                  <v-icon>mdi-account</v-icon>Mon compte
-                </v-list-item-title>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-title
-                  ><v-icon>mdi-cog</v-icon> Paramètre</v-list-item-title
-                >
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-title
-                  @click.stop="dialog = true"
-                  style="cursor: pointer"
-                >
-                  <v-icon>mdi-logout</v-icon> Déconnexion
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </div>
-      </template>
+      <v-menu offset-y>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            :ripple="false"
+            plain
+            v-bind="attrs"
+            v-on="on"
+            class="text-capitalize"
+          >
+            {{ nomL }}
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item @click.stop="dialogCompte = true">
+            <v-list-item-title>
+              <v-icon>mdi-account</v-icon> Mon compte
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-title>
+              <v-icon>mdi-cog</v-icon> Paramètre
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item @click.stop="dialog = true">
+            <v-list-item-title>
+              <v-icon>mdi-logout</v-icon> Déconnexion
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
 
     <!-- Liens de navigation pour les petits écrans -->
     <v-dialog v-model="showLinks" max-width="290" class="d-md-none">
       <v-card>
         <v-list>
-          <v-list-item>
-            <v-list-item-title style="cursor: pointer">
-              <router-link to="/accueil">
-                <v-icon>mdi-home</v-icon> Accueil
-              </router-link>
+          <v-list-item @click="navigateTo('/accueil')">
+            <v-list-item-title>
+              <v-icon>mdi-home</v-icon> Accueil
             </v-list-item-title>
           </v-list-item>
-          <v-list-item>
-            <v-list-item-title style="cursor: pointer">
-              <router-link to="live">
-                <v-icon>mdi-play</v-icon> En direct
-              </router-link>
+          <v-list-item @click="navigateTo('/live')">
+            <v-list-item-title>
+              <v-icon>mdi-play</v-icon> En direct
             </v-list-item-title>
           </v-list-item>
-          <v-list-item>
-            <v-list-item-title style="cursor: pointer">
-              <router-link to="history">
-                <v-icon>mdi-history</v-icon> Historique
-              </router-link>
+          <v-list-item @click="navigateTo('/history')">
+            <v-list-item-title>
+              <v-icon>mdi-history</v-icon> Historique
             </v-list-item-title>
           </v-list-item>
         </v-list>
@@ -166,13 +101,10 @@
     <!-- Contenu de la page -->
     <v-dialog v-model="dialog" max-width="290">
       <v-card>
-        <v-card-title class="text-h5 ml-10"> Se deconnecter </v-card-title>
-
-        <v-card-text> Voulez-vous vraiment vous deconnecter? </v-card-text>
-
+        <v-card-title class="text-h5 ml-10">Se déconnecter</v-card-title>
+        <v-card-text>Voulez-vous vraiment vous déconnecter?</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-
           <v-btn class="text-capitalize mb-5" text @click="dialog = false">
             Annuler
           </v-btn>
@@ -180,23 +112,23 @@
             color="pink"
             class="text-capitalize mb-5"
             outlined
-            @click="logout()"
+            @click="logout"
           >
             Se Déconnecter
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
+
     <v-dialog v-model="dialogCompte" persistent max-width="1000">
       <v-card>
-        <v-card-title class="text-h4" style="margin-left: 280px">
+        <v-card-title class="text-h4" style="text-align: center">
           Modifier mes informations
         </v-card-title>
         <v-card-text>
           <!-- Contenu de la modification d'informations -->
           <v-row class="mt-5">
-            <v-col cols="1"></v-col>
-            <v-col cols="2">
+            <v-col cols="12" md="3" class="text-center">
               <v-badge avatar overlap bottom>
                 <template v-slot:badge>
                   <v-avatar>
@@ -204,33 +136,19 @@
                     <input type="file" @change="onFileChange" />
                   </v-avatar>
                 </template>
-                <v-avatar width="150" height="150"
-                  ><v-img :src="imgUrl"></v-img
-                ></v-avatar>
+                <v-avatar width="150" height="150">
+                  <v-img :src="imgUrl"></v-img>
+                </v-avatar>
               </v-badge>
             </v-col>
-            <v-col cols="9" class="mt-5">
+            <v-col cols="12" md="9" class="mt-5">
               <p>
                 Nom :
-                <span
-                  style="
-                    font-weight: bold;
-                    font-size: large;
-                    color: rgba(0, 0, 0, 0.6);
-                  "
-                  >{{ nomL }}</span
-                >
+                <span class="user-info">{{ nomL }}</span>
               </p>
               <p>
                 Nom d'utilisateur :
-                <span
-                  style="
-                    font-weight: bold;
-                    font-size: large;
-                    color: rgba(0, 0, 0, 0.6);
-                  "
-                  >{{ userL }}</span
-                >
+                <span class="user-info">{{ userL }}</span>
               </p>
             </v-col>
           </v-row>
@@ -238,55 +156,50 @@
         <v-card-text>
           <v-container>
             <v-row>
-              <v-col cols="1"></v-col>
-              <v-col cols="5">
-                <label style="font-size: 15px"><b>Nom :</b></label>
+              <v-col cols="12" md="6">
+                <label class="form-label"><b>Nom :</b></label>
                 <v-text-field
-                  style="font-size: 14px"
+                  class="form-field"
+                  v-model="name"
                   elevation="0"
                   outlined
                   dense
-                  v-model="name"
                 ></v-text-field>
 
-                <label style="font-size: 15px"><b>Adresse E-mail :</b></label>
+                <label class="form-label"><b>Adresse E-mail :</b></label>
                 <v-text-field
-                  style="font-size: 14px"
+                  class="form-field"
                   v-model="email"
                   elevation="0"
                   outlined
                   dense
                 ></v-text-field>
               </v-col>
-              <v-col cols="5">
-                <label style="font-size: 15px"><b>Nom d'utilisateur:</b></label>
+              <v-col cols="12" md="6">
+                <label class="form-label"><b>Nom d'utilisateur:</b></label>
                 <v-text-field
-                  style="font-size: 14px"
+                  class="form-field"
                   v-model.lazy="userName"
                   elevation="0"
                   outlined
                   dense
                 ></v-text-field>
 
-                <label style="font-size: 15px"
-                  ><b>Numero de telephone :</b></label
-                >
+                <label class="form-label"><b>Numéro de téléphone :</b></label>
                 <v-text-field
-                  style="font-size: 14px"
+                  class="form-field"
                   v-model="numTelephone"
                   elevation="0"
                   outlined
                   dense
                 ></v-text-field>
               </v-col>
-              <v-col cols="1"></v-col>
             </v-row>
           </v-container>
         </v-card-text>
 
         <v-card-actions>
           <v-spacer></v-spacer>
-
           <v-btn
             class="text-capitalize mb-5"
             text
@@ -294,7 +207,7 @@
           >
             Annuler
           </v-btn>
-          <v-btn color="pink" class="text mb-5" outlined @click="updateInfo()">
+          <v-btn color="pink" class="text mb-5" outlined @click="updateInfo">
             Mettre à jour
           </v-btn>
         </v-card-actions>
@@ -434,6 +347,10 @@ export default {
     toggleLinks() {
       this.showLinks = !this.showLinks;
     },
+    navigateTo(route) {
+      this.showLinks = false;
+      this.$router.push(route);
+    },
   },
   created() {
     const userData = localStorage.getItem("userData");
@@ -457,7 +374,31 @@ export default {
 </script>
 
 <style scoped>
-.elements:hover {
+.nav-link {
+  font-size: 15px;
+  text-decoration: none;
+  color: black;
+  opacity: 80%;
+  margin-left: 60px;
+  margin-top: 16px;
+  font-weight: bold;
+}
+
+.nav-link:hover {
   color: #e91e63;
+}
+
+.user-info {
+  font-weight: bold;
+  font-size: large;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.form-label {
+  font-size: 15px;
+}
+
+.form-field {
+  font-size: 14px;
 }
 </style>
