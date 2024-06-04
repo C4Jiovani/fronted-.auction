@@ -1,59 +1,35 @@
 <template>
   <v-container class="mb-9">
     <v-snackbar v-model="snackbar" top color="warning" :timeout="timeout">
-      <b><v-icon class="mr-5">mdi-alert</v-icon>{{ text }}</b>
-      <template>
-      </template>
+      <b><v-icon class="mr-2">mdi-alert</v-icon>{{ text }}</b>
     </v-snackbar>
     <v-snackbar v-model="snackbarTrue" top color="success" :timeout="timeout">
-      <b><v-icon class="mr-5">mdi-check</v-icon>{{ textTrue }}</b>
-      <template>
-      </template>
+      <b><v-icon class="mr-2">mdi-check</v-icon>{{ textTrue }}</b>
     </v-snackbar>
-    <h1 style="margin-top: -15px; font-size: 20px; color: #e91e63;" id="produits">En direct<span
-        style="color: black;">.</span></h1>
+    <h1 id="produits" class="text-h1">En direct<span>.</span></h1>
     <v-row>
-      <v-col cols="8">
+      <v-col cols="12" md="8">
         <v-card elevation="5" class="mt-8" style="border-radius: 20px; width: 100%; background-color: #e4e4e6;">
           <v-row>
-            <v-col cols="5.5" class="ml-9">
+            <v-col cols="12" md="5.5" class="ml-4 ml-md-0">
               <h5>{{ countdown }}</h5>
-
-              <v-carousel class="mt-2" height="350" style="border-top-left-radius:15px;border-top-right-radius:15px;"
-                hide-delimiters>
-                <!-- <v-carousel-item></v-carousel-item> -->
-                <v-carousel-item v-for="(item, i) in image" :key="i" :src="`http://localhost:5000/${item.src}`"
-                  style="width: 350px;"></v-carousel-item>
+              <v-carousel class="mt-2" height="350" style="border-top-left-radius:15px;border-top-right-radius:15px;" hide-delimiters>
+                <v-carousel-item v-for="(item, i) in image" :key="i" :src="`http://localhost:5000/${item.src}`"></v-carousel-item>
               </v-carousel>
-              <h3
-                style="color: white; background-color: #e91e63; font-size: 20px; padding: 10px 15px; border-bottom-left-radius:15px;border-bottom-right-radius:15px;">
-                Prix Actuelle: <span class="ml-5">{{ prixInit }} €</span></h3>
+              <h3 class="price-tag">Prix Actuel: <span class="ml-2">{{ prixInit }} €</span></h3>
             </v-col>
-            <v-col cols="5.5">
-              <h1 style="color: #e91e63;" class="mt-5">{{ nom }}</h1>
-              <p class="mt-5">{{ description }}</p>
-              <v-spacer></v-spacer>
-              <h3 style="margin-top: 78px;">On n'attends plus que vous:</h3>
-              <v-row>
-                <v-col cols="9">
-                  <v-text-field :rules="rules" class="mt-2" v-mask="['### ### ###']" label="Votre prix(en Euro)"
-                    style="border-radius: 30px;" v-model="newComment" type="number" solo></v-text-field>
-                </v-col>
-                <v-col cols="1" class="mt-2">
-                  <v-icon @click="sendComment" class="mt-3">mdi-send</v-icon>
-                </v-col>
-              </v-row>
+            <v-col cols="12" md="6.5">
+              <h2 class="product-name">{{ nom }}</h2>
+              <p class="product-description">{{ description }}</p>
+              <v-text-field :rules="rules" class="mt-2" v-mask="['### ### ###']" label="Votre prix (en Euro)" style="border-radius: 30px;" v-model="newComment" type="number" solo></v-text-field>
+              <v-btn @click="sendComment" class="mt-2" color="primary">Envoyer</v-btn>
             </v-col>
           </v-row>
         </v-card>
       </v-col>
-      <v-col cols="4">
-        <v-card elevation="5"
-          style="background-color: #e4e4e6; width: 100%; padding-right: -50px; border-radius: 15px; height: 470px;overflow-y: auto"
-          class="mt-2">
-          <v-card-title class="ml-10" style="color: #e91e63;">
-            Commentaire en direct
-          </v-card-title>
+      <v-col cols="12" md="4">
+        <v-card elevation="5" class="mt-2" style="background-color: #e4e4e6; border-radius: 15px;">
+          <v-card-title class="ml-4 ml-md-0" style="color: #e91e63;">Commentaires en direct</v-card-title>
           <v-card-actions>
             <v-container>
               <v-row v-for="comment in sortedComments" :key="comment.id">
@@ -62,12 +38,10 @@
                 </v-col>
                 <v-col cols="6">
                   <h5>{{ comment.nameL }}</h5>
-                  <p style="font-size: 15px;">Je propose :</p>
+                  <p style="font-size: 14px;">Je propose :</p>
                 </v-col>
                 <v-col cols="4">
-                  <p></p>
-                  <h1 style="font-size: 16px;">{{ comment.montant }} €</h1>
-                  <!-- <h2>{{ comment.montant }} $</h2> -->
+                  <h2 class="comment-price">{{ comment.montant }} €</h2>
                 </v-col>
                 <v-divider></v-divider>
               </v-row>
@@ -78,6 +52,7 @@
     </v-row>
   </v-container>
 </template>
+
 <script>
 import axios from 'axios';
 import Avatar from '@/components/Avatar.vue';
@@ -108,10 +83,10 @@ export default ({
       idLive: '',
       varTemp: '',
       snackbar: false,
-      text: 'Le prix proposé doit etre superieur au prix initial',
+      text: 'Le prix proposé doit être supérieur au prix initial',
       timeout: 3000,
       snackbarTrue: false,
-      textTrue: 'Valeur ajouté avec success',
+      textTrue: 'Valeur ajoutée avec succès',
     }
   },
   // components: { navBar, Main },
@@ -192,4 +167,42 @@ export default ({
   },
 })
 </script>
-<style></style>
+
+<style scoped>
+.text-h1 {
+  margin-top: -15px;
+  font-size: 20px;
+  color: #e91e63;
+}
+
+.product-name {
+  color: #e91e63;
+  margin-top: 1.5rem;
+  font-size: 24px; /* Augmentez la taille de la police */
+}
+
+.product-description {
+  margin-top: 1.5rem;
+}
+
+.price-tag {
+  color: white;
+  background-color: #e91e63;
+  font-size: 20px;
+  padding: 10px 15px;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+.comment-price {
+  font-size: 16px;
+}
+
+/* Polices Google */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+</style>
+
